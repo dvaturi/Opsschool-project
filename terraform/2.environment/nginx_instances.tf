@@ -43,7 +43,7 @@
 #  }
 #}
 
-#resource "aws_security_group_rule" "nginx_http_acess" {
+#resource "aws_security_group_rule" "nginx_http_access" {
 #  description       = "allow http access from anywhere"
 #  from_port         = 80
 #  protocol          = "tcp"
@@ -53,7 +53,7 @@
 #  cidr_blocks       = ["0.0.0.0/0"]
 #}
 
-#resource "aws_security_group_rule" "nginx_ssh_acess" {
+#resource "aws_security_group_rule" "nginx_ssh_access" {
 #  description       = "allow ssh access from anywhere"
 #  from_port         = 22
 #  protocol          = "tcp"

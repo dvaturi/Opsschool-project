@@ -11,7 +11,7 @@ variable "instance_type" {
 }
 
 variable "key_name" {
-  default     = "opsschoolkeypair"
+  default     = "opsschoolproject"
   description = "The key name of the Key Pair to use for the instance"
   type        = string
 }
@@ -20,6 +20,11 @@ variable "ubuntu_account_number" {
   description = "The AWS account number of the offical Ubuntu Images"
   default     = "099720109477"
   type        = string
+}
+
+variable "bastion_instances_count" {
+  description = "The number of bastion instances to create"
+  default     = 2
 }
 
 #variable "nginx_instances_count" {
