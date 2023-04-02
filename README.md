@@ -6,13 +6,18 @@
 - Install [Terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli) on your workstation/server
 - Install [aws cli](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html) on your workstation/server
 - Install [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) on your workstation/server
-- Install [helm](https://www.consul.io/docs/k8s/helm) on your workstation/server/Jenkins slave.
-- jeknins server with plugins & credntials (will be automated soon)
 
 ## Run terrafrom
+Run the following to bring the s3 bucket up (for env tfstate file):
+```bash
+cd terraform/1.s3_creation/
+terraform init
+terraform apply --auto-approve
+```
+
 Run the following to bring environment up:
 ```bash
-cd terrafrom
+cd terraform/2.environment/
 terraform init
 terraform apply --auto-approve
 ```
