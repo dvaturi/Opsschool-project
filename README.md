@@ -10,9 +10,9 @@
 --make sure the keypair have the right permissions (*chmod 400*)
 
 ## Variables
-Change the ```aws_region``` to your requested region (default: ```us-east-2```)
-Change the ```key_name``` to your requested region (default: ```opsschoolproject```)
-Change the ```instance_type``` to your requested region (default: ```t2.micro```)
+- Change the ```aws_region``` to your requested region (default: ```us-east-2```)
+- Change the ```key_name``` to your requested region (default: ```opsschoolproject```)
+- Change the ```instance_type``` to your requested region (default: ```t2.micro```)
 
 ## Run terrafrom
 Run the following to bring the s3 bucket up (for env tfstate file):
