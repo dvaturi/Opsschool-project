@@ -6,8 +6,8 @@
 - Install [Terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli) on your workstation/server
 - Install [aws cli](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html) on your workstation/server
 - Install [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) on your workstation/server
-- Create a keypair for AWS (at the specific aws_region with the specific name "opsschoolproject")
---make sure the keypair have the right permissions (*chmod 400*)
+- Create a keypair for AWS (at the specific aws_region with the specific name ```opsschoolproject```)
+--make sure the keypair have the right permissions (```*chmod 400*```)
 
 ## Variables
 - Change the ```aws_region``` to your requested region (default: ```us-east-2```)
