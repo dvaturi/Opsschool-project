@@ -5,7 +5,7 @@ variable "aws_region" {
 }
 
 variable "instance_type" {
-  description = "The type of the nginx EC2, for example - t2.medium"
+  description = "The type of the EC2, for example - t2.medium"
   type        = string
   default     = "t2.micro"
 }
