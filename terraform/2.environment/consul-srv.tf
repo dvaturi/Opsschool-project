@@ -48,8 +48,7 @@ resource "aws_security_group_rule" "consul_ssh_access" {
   security_group_id = aws_security_group.consul_sg.id
   to_port           = 22
   type              = "ingress"
-  cidr_blocks       = ["0.0.0.0/0"]
-  #need to change the cider blocks to bastion servers ip range
+  cidr_blocks       = [var.bastion_cidr_block]
 }
 
 resource "aws_security_group_rule" "allow_http_from_world" {

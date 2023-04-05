@@ -32,6 +32,16 @@ variable "consul_instances_count" {
   default     = 3
 }
 
+variable "bastion_cidr_block" {
+  type = list(string)
+  default = [ "xxx.xxx.xxx.xxx/xx", "xxx.xxx.xxx.xxx/xx" ]
+}
+
+variable "cidr_block" {
+  type = list(string)
+  default = [ "xxx.xxx.xxx.xxx/xx", "xxx.xxx.xxx.xxx/xx", "xxx.xxx.xxx.xxx/xx", "xxx.xxx.xxx.xxx/xx", "xxx.xxx.xxx.xxx/xx" ]
+}
+
 #variable "nginx_instances_count" {
 #  description = "The number of Nginx instances to create"
 #  default     = 2
