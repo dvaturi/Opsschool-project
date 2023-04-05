@@ -40,7 +40,7 @@ resource "aws_security_group_rule" "bastion_ssh_access" {
   security_group_id = aws_security_group.bastion_sg.id
   to_port           = 22
   type              = "ingress"
-  cidr_blocks       = ["0.0.0.0/0"]
+  cidr_blocks       = [var.bastion_cidr_block_ext]
 }
 
 resource "aws_security_group_rule" "bastion_outbound_anywhere" {
