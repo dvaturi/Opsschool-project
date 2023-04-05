@@ -1,4 +1,4 @@
-#Creating bastion instance
+#Creating bastion instances
 resource "aws_instance" "bastion" {
   count = var.bastion_instances_count
   ami = data.aws_ami.ubuntu-18.id
@@ -7,12 +7,14 @@ resource "aws_instance" "bastion" {
   associate_public_ip_address = true
   subnet_id = module.vpc_module.public_subnets_id[count.index]
   vpc_security_group_ids = [aws_security_group.bastion_sg.id]
-#  iam_instance_profile   = aws_iam_instance_profile.consul-join.name
+  iam_instance_profile   = aws_iam_instance_profile.consul-join.name
     
   tags = {
     Name = "bastion-${regex(".$", data.aws_availability_zones.available.names[count.index])}"
     Owner = "Dean Vaturi"
     Purpose = var.purpose_tag
+    consul_server = "false"
+    kandula_app = "true"
   }
 }
 
@@ -26,6 +28,8 @@ resource "aws_security_group" "bastion_sg" {
     Name = "bastion-access-${module.vpc_module.vpc_id}"
     Owner = "Dean Vaturi"
     Purpose = var.purpose_tag
+    consul_server = "false"
+    kandula_app = "true"
   }
 }
 
@@ -47,4 +51,4 @@ resource "aws_security_group_rule" "bastion_outbound_anywhere" {
   to_port           = 0
   type              = "egress"
   cidr_blocks       = ["0.0.0.0/0"]
-} 
+}

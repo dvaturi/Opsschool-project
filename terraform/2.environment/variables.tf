@@ -27,6 +27,11 @@ variable "bastion_instances_count" {
   default     = 2
 }
 
+variable "consul_instances_count" {
+  description = "The number of consul server instances to create"
+  default     = 3
+}
+
 #variable "nginx_instances_count" {
 #  description = "The number of Nginx instances to create"
 #  default     = 2
