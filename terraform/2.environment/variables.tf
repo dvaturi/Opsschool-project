@@ -32,19 +32,22 @@ variable "consul_instances_count" {
   default     = 3
 }
 
+#need to change!!!!
 variable "bastion_cidr_block_ext" {
   type = list(string)
-  default = [ "xxx.xxx.xxx.xxx/xx"]
+  default = [ "0.0.0.0/0"]
 }
 
+#need to change!!!!
 variable "bastion_cidr_block" {
   type = list(string)
-  default = [ "xxx.xxx.xxx.xxx/xx", "xxx.xxx.xxx.xxx/xx" ]
+  default = [ "0.0.0.0/0", "0.0.0.0/0" ]
 }
 
+#need to change!!!!
 variable "cidr_block" {
   type = list(string)
-  default = [ "xxx.xxx.xxx.xxx/xx", "xxx.xxx.xxx.xxx/xx", "xxx.xxx.xxx.xxx/xx", "xxx.xxx.xxx.xxx/xx", "xxx.xxx.xxx.xxx/xx" ]
+  default = [ "0.0.0.0/0", "0.0.0.0/0", "0.0.0.0/0", "0.0.0.0/0", "0.0.0.0/0" ]
 }
 
 #variable "nginx_instances_count" {

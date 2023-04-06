@@ -12,8 +12,8 @@ data "aws_ami" "ubuntu-18" {
   }
 }
 
-# Retrieve bastion instance public IPs
-data "aws_instance" "bastion_public_ips" {
+# Retrieve bastion instance private IPs
+data "aws_instance" "bastion_private_ips" {
   count = var.bastion_instances_count
   instance_id = aws_instance.bastion[count.index].id
   depends_on = [aws_instance.bastion]

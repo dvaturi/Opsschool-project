@@ -13,8 +13,8 @@ resource "aws_instance" "bastion" {
     Name = "bastion-${regex(".$", data.aws_availability_zones.available.names[count.index])}"
     Owner = "Dean Vaturi"
     Purpose = var.purpose_tag
-    consul_server = "false"
-    kandula_app = "true"
+#    consul_server = "false"
+#    kandula_app = "true"
   }
 }
 
@@ -28,8 +28,8 @@ resource "aws_security_group" "bastion_sg" {
     Name = "bastion-access-${module.vpc_module.vpc_id}"
     Owner = "Dean Vaturi"
     Purpose = var.purpose_tag
-    consul_server = "false"
-    kandula_app = "true"
+#    consul_server = "false"
+#    kandula_app = "true"
   }
 }
 
@@ -40,7 +40,7 @@ resource "aws_security_group_rule" "bastion_ssh_access" {
   security_group_id = aws_security_group.bastion_sg.id
   to_port           = 22
   type              = "ingress"
-  cidr_blocks       = [var.bastion_cidr_block_ext]
+  cidr_blocks       = var.bastion_cidr_block_ext
 }
 
 resource "aws_security_group_rule" "bastion_outbound_anywhere" {
