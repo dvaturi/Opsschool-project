@@ -32,8 +32,35 @@ variable "consul_instances_count" {
   default     = 3
 }
 
+#locals {
+#  jenkins_home = "/home/ubuntu/jenkins_home"
+#  jenkins_home_mount = "${local.jenkins_home}:/var/jenkins_home"
+#  docker_sock_mount = "/var/run/docker.sock:/var/run/docker.sock"
+#  java_opts = "JAVA_OPTS='-Djenkins.install.runSetupWizard=false'"
+#}
+
+variable "jenkins_master_instances_count" {
+  description = "The number of jenkins server instances to create"
+  default     = 1
+}
+
+variable "jenkins_slave_instances_count" {
+  description = "The number of jenkins server instances to create"
+  default     = 2
+}
+
 #need to change!!!!
-variable "bastion_cidr_block_ext" {
+variable "bastion_cidr_block_in" {
+  type = list(string)
+  default = [ "0.0.0.0/0"]
+}
+
+variable "bastion_cidr_block_out" {
+  type = list(string)
+  default = [ "0.0.0.0/0"]
+}
+
+variable "jenkins_cidr_block_out" {
   type = list(string)
   default = [ "0.0.0.0/0"]
 }

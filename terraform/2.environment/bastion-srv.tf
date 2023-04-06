@@ -5,7 +5,7 @@ resource "aws_instance" "bastion" {
   instance_type = var.instance_type
   key_name = var.key_name
   associate_public_ip_address = true
-  subnet_id = module.vpc_module.public_subnets_id[count.index]
+  subnet_id = element(module.vpc_module.private_subnets_id, count.index)
   vpc_security_group_ids = [aws_security_group.bastion_sg.id]
   iam_instance_profile   = aws_iam_instance_profile.consul-join.name
     
@@ -40,7 +40,7 @@ resource "aws_security_group_rule" "bastion_ssh_access" {
   security_group_id = aws_security_group.bastion_sg.id
   to_port           = 22
   type              = "ingress"
-  cidr_blocks       = var.bastion_cidr_block_ext
+  cidr_blocks       = var.bastion_cidr_block_in
 }
 
 resource "aws_security_group_rule" "bastion_outbound_anywhere" {
@@ -50,5 +50,5 @@ resource "aws_security_group_rule" "bastion_outbound_anywhere" {
   security_group_id = aws_security_group.bastion_sg.id
   to_port           = 0
   type              = "egress"
-  cidr_blocks       = ["0.0.0.0/0"]
+  cidr_blocks       = var.bastion_cidr_block_out
 }

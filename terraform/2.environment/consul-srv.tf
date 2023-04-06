@@ -1,5 +1,5 @@
 #Creating consul servers instances
-resource "aws_instance" "consul" {
+resource "aws_instance" "consul_server" {
   count = var.consul_instances_count
   ami = data.aws_ami.ubuntu-18.id
   instance_type = var.instance_type
@@ -47,7 +47,6 @@ resource "aws_security_group_rule" "consul_ssh_access" {
   security_group_id = aws_security_group.consul_sg.id
   to_port           = 22
   type              = "ingress"
-  #cidr_blocks       = var.bastion_cidr_block
   cidr_blocks = [for ip in data.aws_instance.bastion_private_ips.*.private_ip : "${ip}/32"]
 }
 
