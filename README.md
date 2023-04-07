@@ -1,6 +1,7 @@
 # START ENVIRONMENT
 
-![Untitled drawio (2)](https://user-images.githubusercontent.com/57751780/229353912-ff81d504-98cf-473a-be78-655142743ddf.png)
+![Untitled drawio (3)](https://user-images.githubusercontent.com/57751780/230607516-7282ee6c-6cd8-4286-b610-9f1ba80b75bb.png)
+
 
 ## Prerequisites
 - Install [Terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli) on your workstation/server
