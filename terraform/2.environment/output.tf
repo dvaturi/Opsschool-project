@@ -3,5 +3,5 @@ output "consul-servers" {
 }
 
 output "bastion-servers" {
-  value = aws_instance.bastion_server.*.public_dns
+  value = aws_instance.bastion.*.public_dns
 }
