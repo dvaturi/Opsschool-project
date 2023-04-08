@@ -1,0 +1,13 @@
+plugin: aws_ec2
+regions:
+  - us-east-2
+keyed_groups:
+  - prefix: tag
+    key: tags
+compose:
+  # Use the private IP address to connect to the host
+  # (note: this does not modify inventory_hostname, which is set via I(hostnames))
+  ansible_host: private_ip_addre
+hostnames:
+  # list in order of hostname precedence; if no var in the list exists for the host do not add the host to inventory
+  - private-ip-address

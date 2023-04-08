@@ -1,0 +1,80 @@
+---
+- name: Install unzip and dnsmask
+  apt:
+    pkg:
+    - unzip
+    - dnsmasq
+    update_cache: yes
+
+- name: Copy dnsmask conf file
+  ansible.builtin.copy:
+    src: 10-consul
+    dest: /etc/dnsmasq.d/
+    force: yes
+    owner: root
+    group: root
+    mode: '0644'
+  notify: "restart dnsmask service"
+
+- name: Copy resolved.conf file
+  ansible.builtin.copy:
+    src: resolved.conf
+    dest: /etc/systemd/
+    force: yes
+    owner: root
+    group: root
+    mode: '0644'
+  notify: "restart resolved service"
+
+- name: Download consul
+  ansible.builtin.unarchive:
+    src: "https://releases.hashicorp.com/consul/{{ CONSUL_VERSION }}/consul_{{ CONSUL_VERSION }}_linux_amd64.zip"
+    dest: /usr/local/bin/
+    remote_src: yes
+
+- name: add group consul
+  ansible.builtin.group:
+    name: consul
+    state: present
+
+- name: add consul user
+  ansible.builtin.user:
+    name: consul
+    group: consul
+
+- name: Creates directory
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: consul
+    group: consul
+  with_items:
+  - /opt/consul
+  - /etc/consul.d
+  - /run/consul
+
+- name: copy consul template
+  template:
+    dest: /etc/consul.d/config.json
+    src: config.json.j2
+    force: yes
+    owner: consul
+    group: consul
+    mode: '0755'
+  notify: "restart consul service"
+
+- name: Copy consul.service conf file
+  ansible.builtin.copy:
+    src: consul.service
+    dest: /etc/systemd/system/consul.service
+    force: yes
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: reload service consul
+  ansible.builtin.service:
+    name: consul
+    state: reloaded
+    enabled: yes
+    daemon_reload: yes

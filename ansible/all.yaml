@@ -1,0 +1,42 @@
+# - name: kandula_playbook
+#   hosts: tag_kandula_app_true
+#   remote_user: ubuntu
+#   become: yes
+#   become_user: root
+#   become_method: sudo
+#   roles:
+#     - consul
+#     - node-exporter
+#     - filebeat
+
+- name: kandula_playbook
+  hosts: tag_jenkins_true
+  remote_user: ubuntu
+  become: yes
+  become_user: root
+  become_method: sudo
+  roles:
+    - docker-role
+    - jenkins-role
+
+# - name: kandula_playbook
+#   hosts: tag_prometheus_server_true:&tag_kandula_app_true
+#   remote_user: ubuntu
+#   become: yes
+#   become_user: root
+#   become_method: sudo
+#   roles:
+#     - docker-role
+#     - prometheus
+    
+
+# - name: kandula_playbook
+#   hosts: tag_elasticsearch_kibana_true
+#   remote_user: ubuntu
+#   become: yes
+#   become_user: root
+#   become_method: sudo
+#   roles:
+#     - elasticsearch-role
+#     - kibana-role
+

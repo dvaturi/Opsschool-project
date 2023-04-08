@@ -1,0 +1,15 @@
+---
+# tasks file for jenkins-role
+- amazon.aws.ec2_metadata_facts:
+
+- name: Ensure dependencies are installed
+  apt:
+    pkg:
+    - openjdk-11-jdk
+    update_cache: yes
+
+- include_tasks: jenkins-master.yml
+  when:  ansible_ec2_user_data == "jenkins_master"
+
+- include_tasks: jenkins-slave.yml
+  when: ansible_ec2_user_data == "jenkins_slave"

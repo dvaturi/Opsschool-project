@@ -1,0 +1,7 @@
+---
+# handlers file for filebeat
+- name: restart filebeat
+  ansible.builtin.service:
+    name: filebeat
+    state: restarted
+  listen: "restart filebeat service"
