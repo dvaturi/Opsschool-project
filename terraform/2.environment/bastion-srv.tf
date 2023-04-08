@@ -36,8 +36,8 @@ resource "aws_instance" "bastion" {
     Name = "bastion-${regex(".$", data.aws_availability_zones.available.names[count.index])}"
     Owner = "Dean Vaturi"
     Purpose = var.purpose_tag
-#    consul_server = "false"
-#    kandula_app = "true"
+    consul_server = "false"
+    kandula_app = "true"
   }
 }
 
