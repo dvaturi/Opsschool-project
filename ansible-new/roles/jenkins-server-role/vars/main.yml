@@ -1,0 +1,5 @@
+# vars file for roles/jenkins-server-role
+---
+
+jenkins_admin_username: "admin"
+jenkins_admin_password: "dean321!"

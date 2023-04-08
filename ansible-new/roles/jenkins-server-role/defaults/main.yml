@@ -1,0 +1,7 @@
+---
+# defaults file for roles/jenkins-server-role
+jenkins_admin_password: "Dean321"
+jenkins_plugins:
+  - git
+  - workflow-aggregator
+  - blueocean
