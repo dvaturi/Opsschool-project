@@ -1,8 +1,5 @@
 # START ENVIRONMENT
-
-![Untitled drawio (5)](https://user-images.githubusercontent.com/57751780/230722852-b6c97871-f7e3-4dc2-b681-323a6c0aa5c3.png)
-
-
+![Untitled drawio (6)](https://user-images.githubusercontent.com/57751780/230729479-0fcf2a9c-1f43-414a-8cf5-c8538e6ee4dc.png)
 
 
 ## Prerequisites
