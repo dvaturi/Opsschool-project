@@ -4,6 +4,17 @@ variable "aws_region" {
   type    = string
 }
 
+variable "source_pem_file_path" {
+  default = "/home/ec2-user/.ssh/opsschoolproject.pem"
+  type    = string
+}
+
+variable "destination_pem_file_path" {
+  default = "/home/ubuntu/.ssh/opsschoolproject.pem"
+  type    = string
+}
+
+
 variable "instance_type" {
   description = "The type of the EC2, for example - t2.medium"
   type        = string

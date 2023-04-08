@@ -10,24 +10,24 @@ resource "aws_instance" "bastion" {
   iam_instance_profile   = aws_iam_instance_profile.consul-join.name
   
   provisioner "file" {
-    source      = "/home/ec2-user/.ssh/opsschoolproject.pem"
-    destination = "/home/ubuntu/.ssh/opsschoolproject.pem"
+    source      = var.source_pem_file_path
+    destination = var.destination_pem_file_path
     connection {
       type        = "ssh"
       user        = "ubuntu"
-      private_key = file("/home/ec2-user/.ssh/opsschoolproject.pem")
+      private_key = file(var.source_pem_file_path)
       host        = self.public_ip
     }
   }
 
   provisioner "remote-exec" {
     inline = [
-      "chmod 400 /home/ubuntu/.ssh/opsschoolproject.pem"
+      "chmod 400 ${var.destination_pem_file_path}"
     ]
     connection {
       type        = "ssh"
       user        = "ubuntu"
-      private_key = file("/home/ec2-user/.ssh/opsschoolproject.pem")
+      private_key = file(var.source_pem_file_path)
       host        = self.public_ip
     }
   }
