@@ -14,7 +14,7 @@ resource "aws_instance" "jenkins_server" {
     Owner = "Dean Vaturi"
     Purpose = var.purpose_tag
     consul_server = "false"
-    jenkins = "true"
+    jenkins_server = "true"
     kandula_app = "true"
   }
 }
@@ -35,7 +35,7 @@ resource "aws_instance" "jenkins_slave" {
     Owner = "Dean Vaturi"
     Purpose = var.purpose_tag
     consul_server = "false"
-    jenkins = "true"
+    jenkins_slave = "true"
     kandula_app = "true"
   }
 }
