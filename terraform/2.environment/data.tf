@@ -18,3 +18,13 @@ data "aws_instance" "bastion_private_ips" {
   instance_id = aws_instance.bastion[count.index].id
   depends_on = [aws_instance.bastion]
 }
+
+#Retrieve eks info
+#data "aws_eks_cluster" "cluster" {
+#  name = module.eks.cluster_id
+#}
+
+#data "aws_eks_cluster_auth" "cluster" {
+#  name = module.eks.cluster_id
+#}
+

@@ -13,9 +13,9 @@ resource "aws_instance" "jenkins_server" {
     Name = "jenkins-server-${regex(".$", data.aws_availability_zones.available.names[count.index])}"
     Owner = "Dean Vaturi"
     Purpose = var.purpose_tag
-#    consul_server = "false"
-#    jenkins = "true"
-#    kandula_app = "true"
+    consul_server = "false"
+    jenkins = "true"
+    kandula_app = "true"
   }
 }
 
@@ -34,9 +34,9 @@ resource "aws_instance" "jenkins_slave" {
     Name = "jenkins-slave-${regex(".$", data.aws_availability_zones.available.names[count.index])}"
     Owner = "Dean Vaturi"
     Purpose = var.purpose_tag
-#    consul_server = "false"
-#    jenkins = "true"
-#    kandula_app = "true"
+    consul_server = "false"
+    jenkins = "true"
+    kandula_app = "true"
   }
 }
 

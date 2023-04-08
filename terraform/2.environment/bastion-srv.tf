@@ -5,10 +5,33 @@ resource "aws_instance" "bastion" {
   instance_type = var.instance_type
   key_name = var.key_name
   associate_public_ip_address = true
-  subnet_id = element(module.vpc_module.private_subnets_id, count.index)
+  subnet_id = element(module.vpc_module.public_subnets_id, count.index)
   vpc_security_group_ids = [aws_security_group.bastion_sg.id]
   iam_instance_profile   = aws_iam_instance_profile.consul-join.name
-    
+  
+  provisioner "file" {
+    source      = "/home/ec2-user/.ssh/opsschoolproject.pem"
+    destination = "/home/ubuntu/.ssh/opsschoolproject.pem"
+    connection {
+      type        = "ssh"
+      user        = "ubuntu"
+      private_key = file("/home/ec2-user/.ssh/opsschoolproject.pem")
+      host        = self.public_ip
+    }
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "chmod 400 /home/ubuntu/.ssh/opsschoolproject.pem"
+    ]
+    connection {
+      type        = "ssh"
+      user        = "ubuntu"
+      private_key = file("/home/ec2-user/.ssh/opsschoolproject.pem")
+      host        = self.public_ip
+    }
+  }
+
   tags = {
     Name = "bastion-${regex(".$", data.aws_availability_zones.available.names[count.index])}"
     Owner = "Dean Vaturi"
@@ -28,8 +51,6 @@ resource "aws_security_group" "bastion_sg" {
     Name = "bastion-access-${module.vpc_module.vpc_id}"
     Owner = "Dean Vaturi"
     Purpose = var.purpose_tag
-#    consul_server = "false"
-#    kandula_app = "true"
   }
 }
 

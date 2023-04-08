@@ -77,6 +77,11 @@ variable "cidr_block" {
   default = [ "0.0.0.0/0", "0.0.0.0/0", "0.0.0.0/0", "0.0.0.0/0", "0.0.0.0/0" ]
 }
 
+variable "kubernetes_version" {
+  default = 1.18
+  description = "kubernetes version"
+}
+
 #variable "nginx_instances_count" {
 #  description = "The number of Nginx instances to create"
 #  default     = 2

@@ -12,8 +12,8 @@ resource "aws_instance" "consul_server" {
     Name = "consul-server-${regex(".$", data.aws_availability_zones.available.names[count.index])}"
     Owner = "Dean Vaturi"
     Purpose = var.purpose_tag
-#    consul_server = "true"
-#    kandula_app = "true"
+    consul_server = "true"
+    kandula_app = "true"
   }
 }
 
