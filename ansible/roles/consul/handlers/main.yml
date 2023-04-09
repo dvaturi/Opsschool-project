@@ -1,0 +1,19 @@
+---
+# handlers file for consul
+- name: restart dnsmask
+  ansible.builtin.service:
+    name: dnsmasq
+    state: restarted
+  listen: "restart dnsmask service"
+
+- name: restart resolved
+  ansible.builtin.service:
+    name: systemd-resolved.service
+    state: restarted
+  listen: "restart resolved service"
+
+- name: restart consul
+  ansible.builtin.service:
+    name: consul.service
+    state: restarted
+  listen: "restart consul service" 

@@ -1,13 +1,11 @@
-# - name: kandula_playbook
-#   hosts: tag_kandula_app_true
-#   remote_user: ubuntu
-#   become: yes
-#   become_user: root
-#   become_method: sudo
-#   roles:
-#     - consul
-#     - node-exporter
-#     - filebeat
+- name: kandula_playbook
+  hosts: tag_kandula_app_true
+  remote_user: ubuntu
+  become: yes
+  become_user: root
+  become_method: sudo
+  roles:
+    - consul
 
 - name: kandula_playbook
   hosts: tag_jenkins_slave_true
@@ -16,8 +14,8 @@
   become_user: root
   become_method: sudo
   roles:
-    - docker-role
-  #  - jenkins-role
+    - docker
+  #  - jenkins
 
 - name: kandula_playbook
   hosts: tag_jenkins_server_true

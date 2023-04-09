@@ -1,12 +1,20 @@
 #Creating consul servers instances
 resource "aws_instance" "consul_server" {
   count = var.consul_instances_count
-  ami = data.aws_ami.ubuntu-18.id
+  ami = data.aws_ami.amazon-linux-2.id
   instance_type = var.instance_type
   key_name = var.key_name
   vpc_security_group_ids = [aws_security_group.consul_sg.id]
   iam_instance_profile   = aws_iam_instance_profile.consul-join.name
   subnet_id = count.index == 2 ? element(module.vpc_module.private_subnets_id, 0) : element(module.vpc_module.private_subnets_id, count.index)
+  
+  user_data = <<EOF
+              #!/bin/bash
+              sudo yum install -y yum-utils shadow-utils
+              sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/AmazonLinux/hashicorp.repo
+              sudo yum -y install consul
+              EOF
+
 
   tags = {
     Name = "consul-server-${regex(".$", data.aws_availability_zones.available.names[count.index])}"
@@ -41,7 +49,7 @@ resource "aws_security_group_rule" "consul_allow_all_inside_security_group" {
 }
 
 resource "aws_security_group_rule" "consul_ssh_access" {
-  description       = "allow ssh access from anywhere"
+  description       = "allow ssh access from bastion"
   from_port         = 22
   protocol          = "tcp"
   security_group_id = aws_security_group.consul_sg.id

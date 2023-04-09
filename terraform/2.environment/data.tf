@@ -11,6 +11,21 @@ data "aws_ami" "ubuntu-18" {
     values = ["ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-*"]
   }
 }
+#retrive amazon linux 2 aws ami
+
+ 
+
+data "aws_ami" "amazon-linux-2" {
+  most_recent = true
+  filter {
+    name   = "owner-alias"
+    values = ["amazon"]
+  }
+  filter {
+    name   = "name"
+    values = ["amzn2-ami-hvm*"]
+  }
+}
 
 # Retrieve bastion instance private IPs
 data "aws_instance" "bastion_private_ips" {
