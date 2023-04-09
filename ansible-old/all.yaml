@@ -10,24 +10,14 @@
 #     - filebeat
 
 - name: kandula_playbook
-  hosts: tag_jenkins_slave_true
+  hosts: tag_jenkins_true
   remote_user: ubuntu
   become: yes
   become_user: root
   become_method: sudo
   roles:
     - docker-role
-  #  - jenkins-role
-
-- name: kandula_playbook
-  hosts: tag_jenkins_server_true
-  remote_user: ubuntu
-  become: yes
-  become_user: root
-  become_method: sudo
-  roles:
-    - docker-role
-  #  - jenkins-role
+    - jenkins-role
 
 # - name: kandula_playbook
 #   hosts: tag_prometheus_server_true:&tag_kandula_app_true

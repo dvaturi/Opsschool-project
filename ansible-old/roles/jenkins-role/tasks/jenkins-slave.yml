@@ -1,0 +1,4 @@
+- name: Print massage from salve
+  ansible.builtin.debug:
+    msg:
+    - "Running on {{ hostvars[inventory_hostname].tags.Name }}"

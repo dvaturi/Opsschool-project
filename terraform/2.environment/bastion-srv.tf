@@ -8,6 +8,18 @@ resource "aws_instance" "bastion" {
   subnet_id = element(module.vpc_module.public_subnets_id, count.index)
   vpc_security_group_ids = [aws_security_group.bastion_sg.id]
   iam_instance_profile   = aws_iam_instance_profile.consul-join.name
+
+  provisioner "file" {
+    source      = var.source_ansible_folder_path
+    destination = var.destination_ansible_folder_path
+    connection {
+      type        = "ssh"
+      user        = "ubuntu"
+      private_key = file(var.source_pem_file_path)
+      host        = self.public_ip
+    }
+  }  
+
   
   provisioner "file" {
     source      = var.source_pem_file_path
@@ -22,7 +34,14 @@ resource "aws_instance" "bastion" {
 
   provisioner "remote-exec" {
     inline = [
-      "chmod 400 ${var.destination_pem_file_path}"
+      "chmod 400 ${var.destination_pem_file_path}",
+      "sudo -H apt update",
+      "sudo -H apt install -y software-properties-common",
+      "sudo -H apt-add-repository --yes --update ppa:ansible/ansible",
+      "sudo -H apt install -y ansible",
+      "sudo -H apt install -y python-pip",
+      "sudo -H pip install boto3 botocore",
+
     ]
     connection {
       type        = "ssh"
@@ -32,6 +51,9 @@ resource "aws_instance" "bastion" {
     }
   }
 
+
+  
+  
   tags = {
     Name = "bastion-${regex(".$", data.aws_availability_zones.available.names[count.index])}"
     Owner = "Dean Vaturi"

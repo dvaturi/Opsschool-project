@@ -1,8 +1,0 @@
----
-- name: Install and configure Jenkins server
-  hosts: tag_jenkins_server_true
-  become: true
-
-  roles:
-    - geerlingguy.java
-    - jenkins-server-role

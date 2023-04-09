@@ -14,6 +14,15 @@ variable "destination_pem_file_path" {
   type    = string
 }
 
+variable "source_ansible_folder_path" {
+  default = "/home/ec2-user/environment/.c9/opsschool9-dev-env/repositories/Opsschool-project/ansible"
+  type    = string
+}
+
+variable "destination_ansible_folder_path" {
+  default = "/home/ubuntu/ansible"
+  type    = string
+}
 
 variable "instance_type" {
   description = "The type of the EC2, for example - t2.medium"

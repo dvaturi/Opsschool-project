@@ -1,0 +1,89 @@
+---
+
+- name: Print massage from master
+  ansible.builtin.debug:
+    msg:
+    - "Running on {{ hostvars[inventory_hostname].tags.Name }}"
+
+- name: Ensure dependencies are installed.
+  apt:
+    name:
+      - curl
+      - apt-transport-https
+      - gnupg
+    state: present
+
+- name: Add Jenkins apt repository key.
+  apt_key:
+    url: https://pkg.jenkins.io/debian-stable/jenkins.io.key
+    state: present
+
+- name: Add deb to the sources.list.d
+  ansible.builtin.shell: "echo deb https://pkg.jenkins.io/debian-stable binary/ > \
+    /etc/apt/sources.list.d/jenkins.list"
+  
+- name: Install jenkins pkg
+  apt:
+    pkg:
+    - jenkins
+    update_cache: yes
+
+# configure jenkins
+
+- name: Modify variables in init file.
+  lineinfile:
+    dest: "{{ jenkins_init_file }}"
+    regexp: '^{{ item.option }}='
+    line: '{{ item.option }}="{{ item.value }}"'
+    state: present
+    mode: 0644
+  with_items: "{{ jenkins_init_changes }}"
+  register: jenkins_init_prefix
+  notify: restart jenkins service
+
+- name: Create custom init scripts directory.
+  file:
+    path: "{{ jenkins_home }}/init.groovy.d"
+    state: directory
+    owner: "jenkins"
+    group: "jenkins"
+    mode: 0775
+
+- name: configure default users
+  template:
+    src: basic-security.groovy.j2
+    dest: "{{ jenkins_home }}/init.groovy.d/basic-security.groovy"
+    owner: "jenkins"
+    group: "jenkins"
+    mode: 0775
+
+- name: Ensure Jenkins is started and runs on startup.
+  service: 
+    name: jenkins 
+    state: started 
+    enabled: yes
+
+- name: Wait for Jenkins to start up before proceeding.
+  uri:
+    url: "http://localhost:8080/cli/"
+    method: GET
+    return_content: "yes"
+    timeout: 5
+    body_format: raw
+    follow_redirects: "no"
+    status_code: 200,403
+  register: result
+  until: (result.status == 403 or result.status == 200) and (result.content.find("Please wait while") == -1)
+  retries: 60
+  delay: 5
+  changed_when: false
+  check_mode: false
+
+- name: Remove Jenkins security init scripts after first startup.
+  file:
+    path: "{{ jenkins_home }}/init.groovy.d/basic-security.groovy"
+    state: absent
+  
+
+# Update Jenkins and install configured plugins.
+- include_tasks: plugins.yml

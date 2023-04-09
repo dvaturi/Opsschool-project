@@ -3,10 +3,23 @@ output "consul-servers" {
   value = aws_instance.consul_server.*.private_dns
 }
 
-#Bastion server
+# #Bastion server
+# output "bastion_public_ips" {
+#   value = aws_instance.bastion.*.public_ip
+# }
+
+# #Bastion server
+# output "bastion_public_ips" {
+#   value = formatlist("ssh -i ~/.ssh/opsschoolproject.pem ubuntu@%s", aws_instance.bastion.*.public_ip)
+# }
+
+# Bastion server
 output "bastion_public_ips" {
-  value = aws_instance.bastion.*.public_ip
+  value = flatten([
+    for instance in aws_instance.bastion : "ssh -i ~/.ssh/opsschoolproject.pem ubuntu@${instance.public_ip}"
+  ])
 }
+
 
 
 #EKS

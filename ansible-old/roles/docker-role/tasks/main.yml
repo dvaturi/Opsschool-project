@@ -1,0 +1,48 @@
+---
+# tasks file for docker-role
+
+- name: ensure old version are not installed
+  apt:
+    pkg:
+      - docker
+      - docker-engine
+    state: absent
+
+- name: Ensure dependencies are installed
+  apt:
+    pkg:
+    - apt-transport-https
+    - ca-certificates
+    - gnupg2
+    - curl
+    - software-properties-common
+    - lsb-release
+    update_cache: yes
+
+- name: Add an Apt signing key, uses whichever key is at the URL
+  ansible.builtin.apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+
+- name: Add specified repository into sources list
+  ansible.builtin.apt_repository:
+    repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable
+    state: present
+
+- name: install docker
+  apt:
+    pkg:
+    - docker-ce
+    - containerd.io
+    - docker-ce-cli
+    update_cache: yes
+  notify: restart docker service
+
+- name: add ubuntu to docker group 
+  ansible.builtin.user:
+    name: ubuntu
+    group: docker
+  notify: restart docker service
+
+- include_tasks: compose.yml
+  when: docker_install_compose | bool
