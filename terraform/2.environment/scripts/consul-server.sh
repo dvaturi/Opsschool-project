@@ -44,19 +44,21 @@ tee /etc/consul.d/config.json > /dev/null <<EOF
 {
   "advertise_addr": "$PRIVATE_IP",
   "data_dir": "/opt/consul",
-  "datacenter": "kandula",
+  "datacenter": "opsschool",
   "encrypt": "uDBV4e+LbFW3019YKPxIrg==",
   "disable_remote_exec": true,
   "disable_update_check": true,
   "leave_on_terminate": true,
   "retry_join": ["provider=aws tag_key=consul_server tag_value=true"],
-  "enable_script_checks": true,
-  "server": false
+  "server": true,
+  "bootstrap_expect": 1,
+  "ui": true,
+  "client_addr": "0.0.0.0"
 }
 EOF
 
 # Create user & grant ownership of folders
-# useradd consul
+useradd consul
 chown -R consul:consul /opt/consul /etc/consul.d /run/consul
 
 
@@ -84,29 +86,6 @@ EOF
 
 systemctl daemon-reload
 systemctl enable consul.service
-systemctl start consul.service
-
-
-tee /etc/consul.d/jenkins_slave.json > /dev/null <<"EOF"
-{
-  "service": {
-    "id": "jenkins-slave",
-    "name": "jenkins-slave",
-    "tags": ["jenkins-salve"],
-    "port": 80,
-    "checks": [
-      {
-        "id": "service",
-        "name": "docker service",
-        "args": ["systemctl", "status", "docker.service"],
-        "interval": "60s"
-      }
-    ]
-  }
-}
-EOF
-
-systemctl stop consul.service
 systemctl start consul.service
 
 exit 0

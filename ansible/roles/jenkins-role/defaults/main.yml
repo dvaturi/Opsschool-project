@@ -3,8 +3,8 @@
 jenkins_init_file: /etc/default/jenkins
 jenkins_url_prefix: " "
 jenkins_home: /var/lib/jenkins
-jenkins_admin_password: "moshe#"
-jenkins_admin_username: "moshe"
+jenkins_admin_password: "dean#"
+jenkins_admin_username: "dean"
 
 jenkins_init_changes:
   - option: "JENKINS_ARGS"

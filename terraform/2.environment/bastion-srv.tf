@@ -39,6 +39,7 @@ resource "aws_instance" "bastion" {
       "sudo -H apt install -y software-properties-common",
       "sudo -H apt-add-repository --yes --update ppa:ansible/ansible",
       "sudo -H apt install -y ansible",
+      "sudo -H ansible-galaxy collection install community.general",
       "sudo -H apt install -y python-pip",
       "sudo -H pip install boto3 botocore",
 

@@ -7,14 +7,14 @@ resource "aws_instance" "jenkins_server" {
   vpc_security_group_ids = [aws_security_group.jenkins_sg.id, aws_security_group.consul_sg.id]
   iam_instance_profile   = aws_iam_instance_profile.consul-join.name
   subnet_id = element(module.vpc_module.private_subnets_id, 0)
-
   user_data = "jenkins_master"
+
   tags = {
     Name = "jenkins-server-${regex(".$", data.aws_availability_zones.available.names[count.index])}"
     Owner = "Dean Vaturi"
     Purpose = var.purpose_tag
     consul_server = "false"
-    jenkins_server = "true"
+    jenkins = "true"
     kandula_app = "true"
   }
 }
@@ -28,14 +28,14 @@ resource "aws_instance" "jenkins_slave" {
   vpc_security_group_ids = [aws_security_group.jenkins_sg.id, aws_security_group.consul_sg.id]
   iam_instance_profile   = aws_iam_instance_profile.consul-join.name
   subnet_id = element(module.vpc_module.private_subnets_id, count.index)
-  
   user_data = "jenkins_slave"
+
   tags = {
     Name = "jenkins-slave-${regex(".$", data.aws_availability_zones.available.names[count.index])}"
     Owner = "Dean Vaturi"
     Purpose = var.purpose_tag
     consul_server = "false"
-    jenkins_slave = "true"
+    jenkins = "true"
     kandula_app = "true"
   }
 }

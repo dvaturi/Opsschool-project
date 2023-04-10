@@ -1,20 +1,12 @@
 #Creating consul servers instances
 resource "aws_instance" "consul_server" {
-  count = var.consul_instances_count
-  ami = data.aws_ami.amazon-linux-2.id
+  count = var.consul_server_count
+  ami = data.aws_ami.ubuntu-18.id
   instance_type = var.instance_type
   key_name = var.key_name
   vpc_security_group_ids = [aws_security_group.consul_sg.id]
   iam_instance_profile   = aws_iam_instance_profile.consul-join.name
   subnet_id = count.index == 2 ? element(module.vpc_module.private_subnets_id, 0) : element(module.vpc_module.private_subnets_id, count.index)
-  
-  user_data = <<EOF
-              #!/bin/bash
-              sudo yum install -y yum-utils shadow-utils
-              sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/AmazonLinux/hashicorp.repo
-              sudo yum -y install consul
-              EOF
-
 
   tags = {
     Name = "consul-server-${regex(".$", data.aws_availability_zones.available.names[count.index])}"
@@ -24,6 +16,7 @@ resource "aws_instance" "consul_server" {
     kandula_app = "true"
   }
 }
+
 
 #Creating Security Group
 resource "aws_security_group" "consul_sg" {
@@ -58,17 +51,6 @@ resource "aws_security_group_rule" "consul_ssh_access" {
   cidr_blocks = [for ip in data.aws_instance.bastion_private_ips.*.private_ip : "${ip}/32"]
 }
 
-resource "aws_security_group_rule" "allow_http_from_world" {
-  description       = "Allow http from the world"
-  from_port         = 80
-  protocol          = "tcp"
-  security_group_id = aws_security_group.consul_sg.id
-  to_port           = 80
-  type              = "ingress"
-  #need to change
-  cidr_blocks = ["0.0.0.0/0"]
-}
-
 resource "aws_security_group_rule" "allow_consul_ui_access_from_world" {
   description       = "Allow consul UI access from the world"
   from_port         = 8500
@@ -76,98 +58,8 @@ resource "aws_security_group_rule" "allow_consul_ui_access_from_world" {
   security_group_id = aws_security_group.consul_sg.id
   to_port           = 8500
   type              = "ingress"
-  #need to change
-  cidr_blocks = ["0.0.0.0/0"]
+  cidr_blocks = var.internet_cidr
 }
-
-resource "aws_security_group_rule" "allow_consul_ui_access_from_world2" {
-  description       = "Allow consul UI access from the world"
-  from_port         = 9100
-  protocol          = "tcp"
-  security_group_id = aws_security_group.consul_sg.id
-  to_port           = 9100
-  type              = "ingress"
-  #need to change
-  cidr_blocks = ["0.0.0.0/0"]
-}
-
-resource "aws_security_group_rule" "lan_serf_tcp" {
-  description       = "Lan Serf"
-  from_port         = 8301
-  protocol          = "tcp"
-  security_group_id = aws_security_group.consul_sg.id
-  to_port           = 8301
-  type              = "ingress"
-  #need to change
-  cidr_blocks = ["0.0.0.0/0"]
-}
-
-resource "aws_security_group_rule" "wan_self_tcp" {
-  description       = "Wan self"
-  from_port         = 8302
-  protocol          = "tcp"
-  security_group_id = aws_security_group.consul_sg.id
-  to_port           = 8302
-  type              = "ingress"
-  #need to change
-  cidr_blocks = ["0.0.0.0/0"]
-}
-
-resource "aws_security_group_rule" "lan_serf_udp" {
-  description       = "Lan Serf"
-  from_port         = 8301
-  protocol          = "udp"
-  security_group_id = aws_security_group.consul_sg.id
-  to_port           = 8301
-  type              = "ingress"
-  #need to change
-  cidr_blocks = ["0.0.0.0/0"]
-}
-
-resource "aws_security_group_rule" "consul_wan_udp_access" {
-  description       = "Allow Consul WAN access via UDP"
-  from_port         = 8302
-  protocol          = "udp"
-  security_group_id = aws_security_group.consul_sg.id
-  to_port           = 8302
-  type              = "ingress"
-  #need to change
-  cidr_blocks = ["0.0.0.0/0"]
-}
-
-resource "aws_security_group_rule" "consul_dns_tcp_access" {
-  description       = "Allow Consul DNS access via TCP"
-  from_port         = 8600
-  protocol          = "tcp"
-  security_group_id = aws_security_group.consul_sg.id
-  to_port           = 8600
-  type              = "ingress"
-  #need to change
-  cidr_blocks = ["0.0.0.0/0"]
-}
-
-resource "aws_security_group_rule" "consul_dns_udp_access" {
-  description       = "Allow Consul DNS access via UDP"
-  from_port         = 8600
-  protocol          = "udp"
-  security_group_id = aws_security_group.consul_sg.id
-  to_port           = 8600
-  type              = "ingress"
-  #need to change
-  cidr_blocks = ["0.0.0.0/0"]
-}
-
-resource "aws_security_group_rule" "consul_server_tcp_access" {
-  description       = "Allow Consul Server access via TCP"
-  from_port         = 8300
-  protocol          = "tcp"
-  security_group_id = aws_security_group.consul_sg.id
-  to_port           = 8300
-  type              = "ingress"
-  #need to change
-  cidr_blocks = ["0.0.0.0/0"]
-}
-
 
 resource "aws_security_group_rule" "consul_outbound_anywhere" {
   description       = "allow outbound traffic to anywhere"
@@ -176,5 +68,32 @@ resource "aws_security_group_rule" "consul_outbound_anywhere" {
   security_group_id = aws_security_group.consul_sg.id
   to_port           = 0
   type              = "egress"
-  cidr_blocks       = ["0.0.0.0/0"]
+  cidr_blocks       = var.internet_cidr
 } 
+
+
+# Create an IAM role for the auto-join
+resource "aws_iam_role" "consul-join" {
+  name               = "consul-join"
+  assume_role_policy = file("${path.module}/templates/policies/assume-role.json")
+}
+
+# Create the policy
+resource "aws_iam_policy" "consul-join" {
+  name        = "consul-join"
+  description = "Allows Consul nodes to describe instances for joining."
+  policy      = file("${path.module}/templates/policies/describe-instances.json")
+}
+
+# Attach the policy
+resource "aws_iam_policy_attachment" "consul-join" {
+  name       = "consul-join"
+  roles      = [aws_iam_role.consul-join.name]
+  policy_arn = aws_iam_policy.consul-join.arn
+}
+
+# Create the instance profile
+resource "aws_iam_instance_profile" "consul-join" {
+  name  = "consul-join"
+  role = aws_iam_role.consul-join.name
+}
