@@ -29,3 +29,9 @@ cd terraform/2.environment/
 terraform init
 terraform apply --auto-approve
 ```
+## Run ansible
+(Temp, will be automated) connect to one of the bastions with ssh (command will be prompted at the end of the terraform apply):
+```bash
+cd ansible
+ansible-playbook all.yaml
+```
