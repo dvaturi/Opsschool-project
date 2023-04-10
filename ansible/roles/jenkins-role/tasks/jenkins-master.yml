@@ -5,22 +5,32 @@
     msg:
     - "Running on {{ hostvars[inventory_hostname].tags.Name }}"
 
-- name: Ensure dependencies are installed.
+- name: ensure old version are not installed
   apt:
-    name:
+    pkg:
       - curl
       - apt-transport-https
       - gnupg
-    state: present
+    state: absent
+
+- name: Ensure dependencies are installed.
+  apt:
+    pkg:
+      - curl
+      - apt-transport-https
+      - gnupg
+    update_cache: yes
 
 - name: Add Jenkins apt repository key.
-  apt_key:
+  ansible.builtin.apt_key:
     url: https://pkg.jenkins.io/debian-stable/jenkins.io.key
     state: present
 
-- name: Add deb to the sources.list.d
-  ansible.builtin.shell: "echo deb https://pkg.jenkins.io/debian-stable binary/ > \
-    /etc/apt/sources.list.d/jenkins.list"
+- name: Add Jenkins repository to sources.list.d
+  ansible.builtin.apt_repository:
+    repo: deb https://pkg.jenkins.io/debian-stable binary/
+    state: present
+    filename: jenkins
   
 - name: Install jenkins pkg
   apt:
