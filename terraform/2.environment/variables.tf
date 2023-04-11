@@ -88,14 +88,6 @@ variable "cidr_block" {
   default = [ "0.0.0.0/0", "0.0.0.0/0", "0.0.0.0/0", "0.0.0.0/0", "0.0.0.0/0" ]
 }
 
-
-# locals {
-#   jenkins_home = "/home/ubuntu/jenkins_home"
-#   jenkins_home_mount = "${local.jenkins_home}:/var/jenkins_home"
-#   docker_sock_mount = "/var/run/docker.sock:/var/run/docker.sock"
-#   java_opts = "JAVA_OPTS='-Djenkins.install.runSetupWizard=false'"
-# }
-
 variable "kubernetes_version" {
   default = 1.18
   description = "kubernetes version"

@@ -1,5 +1,0 @@
----
-- name: Install Blue Ocean plugin
-  jenkins_plugin:
-    name: blueocean
-    state: present

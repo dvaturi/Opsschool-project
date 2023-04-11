@@ -1,14 +1,13 @@
 ---
 # defaults file for jenkins-role
-jenkins_init_file: /etc/default/jenkins
-jenkins_url_prefix: " "
-jenkins_home: /var/lib/jenkins
-jenkins_admin_password: "dean#"
-jenkins_admin_username: "dean"
+# jenkins_init_file: /etc/default/jenkins
+# jenkins_url_prefix: " "
+# jenkins_home: /var/lib/jenkins
+# jenkins_admin_password: "dean#"
+# jenkins_admin_username: "dean"
 
-jenkins_init_changes:
-  - option: "JENKINS_ARGS"
-    value: "--webroot=/var/cache/$NAME/war --httpPort=$HTTP_PORT"
-  - option: "JAVA_ARGS"
-    value: "-Djenkins.install.runSetupWizard=false"
-
+# jenkins_init_changes:
+#   - option: "JENKINS_ARGS"
+#     value: "--webroot=/var/cache/$NAME/war --httpPort=$HTTP_PORT"
+#   - option: "JAVA_ARGS"
+#     value: "-Djenkins.install.runSetupWizard=false"

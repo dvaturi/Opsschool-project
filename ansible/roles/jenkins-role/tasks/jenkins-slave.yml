@@ -2,3 +2,27 @@
   ansible.builtin.debug:
     msg:
     - "Running on {{ hostvars[inventory_hostname].tags.Name }}"
+
+- name: installing jenkins 1/6
+  become: true
+  shell: sudo apt-get update -y
+
+- name: installing jenkins 2/6
+  become: true
+  shell: sudo apt install docker.io -y
+
+- name: installing jenkins 3/6
+  become: true
+  shell: sudo systemctl start docker
+
+- name: installing jenkins 4/6
+  become: true
+  shell: sudo usermod -aG docker ubuntu
+
+- name: installing jenkins 5/6
+  become: true
+  shell: mkdir -p /home/ubuntu/jenkins_home
+
+- name: installing jenkins 6/6
+  become: true
+  shell: sudo chown -R 1000:1000 /home/ubuntu/jenkins_home

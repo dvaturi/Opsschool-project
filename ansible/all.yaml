@@ -14,6 +14,7 @@
   become_user: root
   become_method: sudo
   roles:
-    - docker-role
+    # - docker-role
     - jenkins-role
+
 
