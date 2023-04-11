@@ -1,36 +1,29 @@
 ---
-
 - name: Print massage from master
   ansible.builtin.debug:
     msg:
     - "Running on {{ hostvars[inventory_hostname].tags.Name }}"
 
-- name: ensure old version are not installed
-  apt:
-    pkg:
-      - curl
-      - apt-transport-https
-      - gnupg
-    state: absent
+- name: Add GPG key for a package repository
+  become: true
+  shell: apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 5BA31D57EF5975CA
 
 - name: Ensure dependencies are installed.
   apt:
-    pkg:
+    name:
       - curl
       - apt-transport-https
       - gnupg
-    update_cache: yes
+    state: present
 
 - name: Add Jenkins apt repository key.
-  ansible.builtin.apt_key:
+  apt_key:
     url: https://pkg.jenkins.io/debian-stable/jenkins.io.key
     state: present
 
-- name: Add Jenkins repository to sources.list.d
-  ansible.builtin.apt_repository:
-    repo: deb https://pkg.jenkins.io/debian-stable binary/
-    state: present
-    filename: jenkins
+- name: Add deb to the sources.list.d
+  ansible.builtin.shell: "echo deb https://pkg.jenkins.io/debian-stable binary/ > \
+    /etc/apt/sources.list.d/jenkins.list"
   
 - name: Install jenkins pkg
   apt:
@@ -96,4 +89,4 @@
   
 
 # Update Jenkins and install configured plugins.
-- include_tasks: plugins.yml
+# - include_tasks: plugins.yml

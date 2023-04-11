@@ -52,14 +52,15 @@ resource "aws_security_group" "jenkins_sg" {
   }
 }
 
-resource "aws_security_group_rule" "jenkins_ssh_access" {
-  description       = "allow ssh access from anywhere"
-  from_port         = 22
+resource "aws_security_group_rule" "jenkins_https_access" {
+  description       = "allow https from anywhere"
+  from_port         = 443
   protocol          = "tcp"
   security_group_id = aws_security_group.jenkins_sg.id
-  to_port           = 22
+  to_port           = 443
   type              = "ingress"
-  cidr_blocks = [for ip in data.aws_instance.bastion_private_ips.*.private_ip : "${ip}/32"]
+  #need to change
+  cidr_blocks = var.internet_cidr
 }
 
 resource "aws_security_group_rule" "jenkins_http_access" {
@@ -70,18 +71,17 @@ resource "aws_security_group_rule" "jenkins_http_access" {
   to_port           = 8080
   type              = "ingress"
   #need to change
-  cidr_blocks = ["0.0.0.0/0"]
+  cidr_blocks = var.internet_cidr
 }
 
-resource "aws_security_group_rule" "jenkins_https_access" {
-  description       = "allow https from anywhere"
-  from_port         = 443
+resource "aws_security_group_rule" "jenkins_ssh_access" {
+  description       = "allow ssh access from anywhere"
+  from_port         = 22
   protocol          = "tcp"
   security_group_id = aws_security_group.jenkins_sg.id
-  to_port           = 443
+  to_port           = 22
   type              = "ingress"
-  #need to change
-  cidr_blocks = ["0.0.0.0/0"]
+  cidr_blocks = [for ip in data.aws_instance.bastion_private_ips.*.private_ip : "${ip}/32"]
 }
 
 resource "aws_security_group_rule" "jenkins_outbound_anywhere" {
@@ -91,7 +91,7 @@ resource "aws_security_group_rule" "jenkins_outbound_anywhere" {
   security_group_id = aws_security_group.jenkins_sg.id
   to_port           = 0
   type              = "egress"
-  cidr_blocks       = var.jenkins_cidr_block_out
+  cidr_blocks       = var.internet_cidr
 } 
 
 

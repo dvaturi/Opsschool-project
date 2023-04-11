@@ -40,7 +40,7 @@ resource "aws_instance" "bastion" {
       "sudo -H apt-add-repository --yes --update ppa:ansible/ansible",
       "sudo -H apt install -y ansible",
       "sudo -H ansible-galaxy collection install community.general",
-      "sudo -H ansible-galaxy collection install amazon.aws",
+      "ansible-galaxy collection install amazon.aws",
       "sudo -H apt install -y python-pip",
       "sudo -H pip install boto3 botocore",
 
@@ -95,5 +95,5 @@ resource "aws_security_group_rule" "bastion_outbound_anywhere" {
   security_group_id = aws_security_group.bastion_sg.id
   to_port           = 0
   type              = "egress"
-  cidr_blocks       = var.bastion_cidr_block_out
+  cidr_blocks       = var.internet_cidr
 }
