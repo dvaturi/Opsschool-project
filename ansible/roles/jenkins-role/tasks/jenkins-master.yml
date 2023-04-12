@@ -30,4 +30,6 @@
 
 - name: installing jenkins 7/7
   become: true
-  shell: sudo docker run -d --restart=always -p 8080:8080 -p 50000:50000 -v /home/ubuntu/jenkins_home:/var/jenkins_home -v /var/run/docker.sock:/var/run/docker.sock --env JAVA_OPTS='-Djenkins.install.runSetupWizard=false' jenkins/jenkins
+  shell: sudo docker run -d --restart=always -p 8080:8080 -p 50000:50000 --env JENKINS_ADMIN_ID=admin --env JENKINS_ADMIN_PASSWORD=Dv201507415! dvaturi/jenkins-srv:latest
+
+
