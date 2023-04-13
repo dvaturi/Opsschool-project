@@ -89,8 +89,19 @@ variable "cidr_block" {
 }
 
 variable "kubernetes_version" {
-  default = 1.18
+  default = 1.24
   description = "kubernetes version"
+}
+
+locals {
+  k8s_service_account_namespace = "default"
+  k8s_service_account_name      = "opsschool-sa"
+  cluster_name = "opsschool-eks-${random_string.suffix.result}"
+}
+
+resource "random_string" "suffix" {
+  length  = 8
+  special = false
 }
 
 

@@ -12,9 +12,6 @@ data "aws_ami" "ubuntu-18" {
   }
 }
 #retrive amazon linux 2 aws ami
-
- 
-
 data "aws_ami" "amazon-linux-2" {
   most_recent = true
   filter {
@@ -34,12 +31,11 @@ data "aws_instance" "bastion_private_ips" {
   depends_on = [aws_instance.bastion]
 }
 
-#Retrieve eks info
-#data "aws_eks_cluster" "cluster" {
-#  name = module.eks.cluster_id
-#}
+# Retrieve eks info
+data "aws_eks_cluster" "eks" {
+  name = module.eks.cluster_name
+}
 
-#data "aws_eks_cluster_auth" "cluster" {
-#  name = module.eks.cluster_id
-#}
-
+data "aws_eks_cluster_auth" "eks" {
+  name = module.eks.cluster_name
+}
