@@ -25,6 +25,7 @@ eks_managed_node_group_defaults = {
       ami_type               = "AL2_x86_64"
       instance_types         = ["t3.medium"]
       vpc_security_group_ids = [aws_security_group.all_worker_mgmt_sg.id]
+      key_name               = var.key_name
 }
 
 eks_managed_node_groups = {
@@ -68,7 +69,8 @@ resource "aws_security_group_rule" "allow_ssh" {
  security_group_id = aws_security_group.all_worker_mgmt_sg.id
  to_port           = 22
  type              = "ingress"
- cidr_blocks = [ "10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16" ]
+ cidr_blocks = [for ip in data.aws_instance.bastion_private_ips.*.private_ip : "${ip}/32"]
+#  cidr_blocks = [ "10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16" ]
 }
 
 
