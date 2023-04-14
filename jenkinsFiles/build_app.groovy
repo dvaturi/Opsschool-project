@@ -15,7 +15,7 @@ node('slave1 || slave2') {
     }
     
     stage('run docker'){
-       container = customImage.run('-p 5000:5000')
+       container = customImage.run('-p 5000:5000 -e FLASK_APP="bla" -e SECRET_KEY="bla"')
     }
     
     stage('Test application'){
