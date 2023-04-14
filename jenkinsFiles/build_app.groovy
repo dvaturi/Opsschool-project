@@ -3,7 +3,7 @@ node('slave1 || slave2') {
     def container
     
     stage('clone git repo'){
-        git branch: 'dean-kandula', changelog: false, credentialsId: 'github', poll: false, url: 'git@github.com:dvaturi/kandula-app-9.git'
+        git branch: 'dean-kandula', changelog: false, credentialsId: 'Github', poll: false, url: 'git@github.com:dvaturi/kandula-app-9.git'
     }
     
     stage('build docker image'){
