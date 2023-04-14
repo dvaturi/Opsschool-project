@@ -3,11 +3,11 @@ node('slave1'){
     def container
     
     stage('clone git repo'){
-        git branch: 'main', changelog: false, credentialsId: 'github', poll: false, url: 'git@github.com:dvaturi/kandula_assignment.git'
+        git branch: 'dean-kandula', changelog: false, credentialsId: 'github', poll: false, url: 'git@github.com:dvaturi/kandula-app-9.git'
     }
     
     stage('build docker image'){
-        customImage = docker.build("devmozes/kandula:latest")
+        customImage = docker.build("dvaturi/kandula:latest")
     }
 
     stage('scan image with trivy'){

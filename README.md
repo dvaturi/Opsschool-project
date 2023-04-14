@@ -11,7 +11,7 @@
 - **make sure to modify var.source_pem_file_path at the terraform/2.environment/variables.tf var file if needed.
 
 ## Variables
-- Change the ```aws_region``` to your requested region (default: ```us-east-2```)
+- Change the ```aws_region``` to your requested region (default: ```us-east-1```)
 - Change the ```key_name``` to your requested region (default: ```opsschoolproject```)
 - Change the ```instance_type``` to your requested region (default: ```t2.micro```)
 

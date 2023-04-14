@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kandula-prod
+  labels:
+    app: backend
+    env: prod
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: backend
+      env: prod
+  template:
+    metadata:
+      labels:
+        app: backend
+        env: prod
+    spec:
+ 
+      containers:
+      - name: kandula
+        image: dvaturi/kandula:latest
+        ports:
+        - containerPort: 5000
+          name: http
+          protocol: TCP
+          
+      #   app: kandula

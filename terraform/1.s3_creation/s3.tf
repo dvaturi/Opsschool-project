@@ -3,7 +3,7 @@ provider "aws" {
 }
 
 resource "aws_s3_bucket" "terraform_state" {
-  bucket = "opsschool-terraform-state"
+  bucket = "opsschool-terraform-state-dean"
   tags = {
     Owner = var.owner_tag
     Purpose = var.purpose_tag
