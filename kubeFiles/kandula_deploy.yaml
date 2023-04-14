@@ -17,7 +17,6 @@ spec:
         app: backend
         env: prod
     spec:
- 
       containers:
       - name: kandula
         image: dvaturi/kandula:latest
@@ -25,5 +24,10 @@ spec:
         - containerPort: 5000
           name: http
           protocol: TCP
+        env:
+        - name: FLASK_APP
+          value: kandula
+        - name: SECRET_KEY
+          value: kandula123
           
       #   app: kandula

@@ -1,6 +1,6 @@
-node('slave1'){
+node('slave1 || slave2') {
     stage('clone git'){
-        git branch: 'master', changelog: false, credentialsId: 'github', poll: false, url: 'git@github.com:dvaturi/Opsschool-project.git'
+        git branch: 'main', changelog: false, credentialsId: 'ac634407-8c13-4169-8ac3-029e1967a35c', poll: false, url: 'git@github.com:dvaturi/Opsschool-project.git'
     }
     
     stage('deploy app'){
