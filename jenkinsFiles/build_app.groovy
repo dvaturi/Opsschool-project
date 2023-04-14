@@ -1,4 +1,4 @@
-node('slave1'){
+node('master'){
     def customImage
     def container
     
