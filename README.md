@@ -41,3 +41,5 @@ ssh -i "~/.ssh/opsschoolproject" ubuntu@ip.of.the.bastion
 cd ansible
 ansible-playbook all.yaml
 ```
+## Configure Jenkins mater and 2 slaves
+- [Jenkins_config](https://github.com/dvaturi/Opsschool-project/blob/main/Jenkins_config.md)
