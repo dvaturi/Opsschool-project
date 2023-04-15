@@ -18,6 +18,6 @@
 - Type <Lable> in the "Labels" bracket - "slave1" and "slave2" (a name per slave that is being created)
 - Select <Use this node as much as possible> in the "Usage" bracket
 - Select <Launch agents via SSH> in the "Launch method" bracket
-- Type *<IP>* in the "Host" bracket
+- Type *IP* in the "Host" bracket
 - Select <Ubuntu (jenkins slaves ssh)>  in the "Credentials" bracket
 - Press "Save"
