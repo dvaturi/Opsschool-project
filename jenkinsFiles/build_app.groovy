@@ -3,7 +3,7 @@ node('slave1 || slave2') {
     def container
     
     stage('clone git repo'){
-        git branch: 'dean-kandula', changelog: false, credentialsId: 'ac634407-8c13-4169-8ac3-029e1967a35c', poll: false, url: 'git@github.com:dvaturi/kandula-app-9.git'
+        git branch: 'dean-kandula', changelog: false, credentialsId: 'github', poll: false, url: 'git@github.com:dvaturi/kandula-app-9.git'
     }
     
     stage('build docker image'){
@@ -25,7 +25,7 @@ node('slave1 || slave2') {
         if ("$response" == "200"){
             echo "the resonse is ${response}"
             
-            withDockerRegistry(credentialsId: 'd1ede3d1-2046-4985-89ba-ec6923eaf0ab') {
+            withDockerRegistry(credentialsId: 'dockerhub') {
                 customImage.push()
                 customImage.push("${BUILD_NUMBER}")
             }
