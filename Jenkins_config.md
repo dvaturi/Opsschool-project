@@ -2,9 +2,9 @@
 - Install
 
 # Create the required credantials
-- Creat Docker Hub creds
-- Create Github SSH creds
-- Create jenkins slave SSH creds
+- Creat Docker Hub creds - username and password (dockerhub account, in the id type "dockerhub")
+- Create Github SSH creds - ssh (use "jenkins" user and "cloud9-github-integration.pem" ssh key, since its configured in github)
+- Create jenkins slave SSH creds ssh (use "ubuntu" user and "opsschoolproject.pem" ssh key since its the keypair for the slaves)
 - Create AWS creds
 - Create K8 creds
 
