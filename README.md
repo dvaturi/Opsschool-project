@@ -42,4 +42,4 @@ cd ansible
 ansible-playbook all.yaml
 ```
 ## Configure Jenkins mater and 2 slaves
-- [Jenkins_config](https://github.com/dvaturi/Opsschool-project/blob/main/Jenkins_config.md)
+- Follow the instructions in order to configure Jenkins [Jenkins_config](https://github.com/dvaturi/Opsschool-project/blob/main/Jenkins_config.md)
