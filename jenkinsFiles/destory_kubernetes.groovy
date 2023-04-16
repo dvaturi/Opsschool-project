@@ -6,7 +6,7 @@ node('slave1 || slave2') {
     stage("update kubeconfig"){
         sh '''
             echo "updating kubeconfig"
-            aws eks --region=us-east-1 update-kubeconfig --name ${params.CLUSTER_NAME}
+            aws eks --region=us-east-1 update-kubeconfig --name params.CLUSTER_NAME
         '''   
     }
 
