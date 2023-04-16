@@ -2,11 +2,12 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: kandula-prod
+  namespace: kandula # namespace added
   labels:
     app: backend
     env: prod
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: backend
@@ -29,5 +30,3 @@ spec:
           value: kandula
         - name: SECRET_KEY
           value: kandula123
-          
-      #   app: kandula
