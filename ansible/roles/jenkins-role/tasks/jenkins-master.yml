@@ -32,6 +32,10 @@
   become: true
   shell: sudo docker run -d --restart=always -p 8080:8080 -p 50000:50000 --env JENKINS_ADMIN_ID=admin --env JENKINS_ADMIN_PASSWORD=Banana321! dvaturi/jenkins-srv:latest
 
+- name: installing aws cli 1/1
+  become: true
+  shell: sudo apt-get install awscli -y
+
 - name: installing kubectl 1/2
   become: true
   shell: curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.23.17/bin/linux/amd64/kubectl
