@@ -2,7 +2,7 @@
 node('slave1 || slave2') {
 
     stage('clone git repo'){
-        git branch: 'main', changelog: false, credentialsId: 'github, poll: false, url: 'git@github.com:dvaturi/Opsschool-project.git'
+        git branch: 'main', changelog: false, credentialsId: 'github', poll: false, url: 'git@github.com:dvaturi/Opsschool-project.git'
     }
 
     stage("Install Cosnul on Kubernetes") {
