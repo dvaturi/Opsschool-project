@@ -25,7 +25,7 @@ node('slave1 || slave2') {
         sh '''
             echo "deleting kandula deployment"
             if kubectl get deploy kandula-prod -n kandula; then
-                kubectl delete -f ./kubeFiles/kandula-deployment.yaml  -n kandula
+                kubectl delete -f ./kubeFiles/kandula_deploy.yaml  -n kandula
             else
                 echo "kandula deployment is not available"
             fi
