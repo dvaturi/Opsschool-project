@@ -42,6 +42,9 @@ mapRoles: |
 ```
 - Run the following command in order to update the kubernetes config map **kubectl apply -f aws-auth.yaml**
 
-# Create 2 jenkins pipeline jobs and make sure you pull the code through remote scm with the github creds
+# Create 3 jenkins pipeline jobs and make sure you pull the code through remote scm with the github creds
+* make sure to create the deploy_app and destroy_app with "This project is parameterized" checked. create 1 parameter **CLUSTER_NAME** and leave the default blank.
+
 - build_app - Opsschool-project/jenkinsFiles/build_app.groovy
 - deploy_app - Opsschool-project/jenkinsFiles/deploy_app.groovy
+- destroy_app - Opsschool-project/jenkinsFiles/destory_app.groovy

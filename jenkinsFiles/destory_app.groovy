@@ -35,13 +35,10 @@ node('slave1 || slave2') {
     stage("slack notification") {
         slackColor = "good"
         end = "success"
-        try {
-        } catch (Exception e) {
-            slackColor = "danger"
-            end = "failure"
-            currentBuild.result = "FAILURE"
-        } finally {
-            slackSend color: slackColor, message: "Destroy_app finished with ${end}: build number#${env.BUILD_NUMBER}"
+        if (currentBuild.result == "FAILURE") {
+          slackColor = "danger"
+          end = "failure"
         }
+        slackSend color: slackColor, message: "Destroy_app finished with ${end}: build number#${env.BUILD_NUMBER}"
     }
 }
