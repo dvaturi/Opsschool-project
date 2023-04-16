@@ -1,10 +1,8 @@
 node('slave1 || slave2') {
     stage('clone git repo'){
-        agent {label "slave1" }
-        steps {
-            git branch: 'main', changelog: false, credentialsId: 'github', poll: false, url: 'git@github.com:dvaturi/Opsschool-project.git'
-        }
+        git branch: 'main', changelog: false, credentialsId: 'github', poll: false, url: 'git@github.com:dvaturi/Opsschool-project.git'
     }
+
     stage("update kubeconfig"){
         agent { label currentBuild.agentLabel }
         steps {
