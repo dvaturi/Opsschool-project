@@ -17,7 +17,7 @@ pipeline {
             }
         }
         stage('clone git repo'){
-            agent {slave1}
+            agent {label "slave1" }
             steps {
                 git branch: 'main', changelog: false, credentialsId: 'github', poll: false, url: 'git@github.com:dvaturi/Opsschool-project.git'
             }
