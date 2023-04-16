@@ -6,19 +6,17 @@ node('slave1 || slave2') {
     }
 
     stage("Install Cosnul on Kubernetes") {
-        
         sh '''
             echo "deleting service & app pods"
-            kubectl delete -f ./Opsschool-project/kubeFiles/kandula_service.yaml
-            kubectl delete -f ./Opsschool-project/kubeFiles/kandula_deploy.yaml
+            kubectl delete -f ./kubeFiles/kandula_service.yaml
+            kubectl delete -f ./kubeFiles/kandula_deploy.yaml
         '''   
     }
 
-        stage("removing github repo") {
-        
+    stage("removing github repo") {
         sh '''
             echo "deleting github repo"
-            rm -rf ./Opsschool-project
+            rm -rf ../Opsschool-project
         '''   
     }
 }
