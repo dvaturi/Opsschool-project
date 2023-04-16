@@ -5,7 +5,7 @@
 - Creat Docker Hub creds - username and password (dockerhub account, in the id type "dockerhub")
 - Create Github SSH creds - ssh (use "jenkins" user and "cloud9-github-integration.pem" ssh key, since its configured in github)
 - Create jenkins slave SSH creds ssh (use "ubuntu" user and "opsschoolproject.pem" ssh key since its the keypair for the slaves)
-- Create slack secret txt - "KFLek94samnZvN6AIC0j9DYr"
+- Create slack secret txt - "KFLek94samnZvN6AlC0j9DYr"
 - Create K8 creds - create secret text with the output of "cat home/ubuntu/.kube/config"
 
 # Configure your 2 slaves (Do it twice 1. slave1 2. Slave2)
@@ -24,7 +24,8 @@
 - Press "**Save**"
 
 # Configure your 2 slaves to be able to work on kubernetes namespace.
-- Run **aws eks --region=us-east-1 update-kubeconfig --name <cluster_name>** you can find the name of the cluster through the AWS UI or as an output from the terraform apply.
+- configure slack app integration, by going into manage jenkins>configure system and look for slack.
+then configure as such "Workspace: *opsschool*, Credentials: *select the jenkins creds you created earlier*, Default channel / member id: *#webhooks* and *save*
 # Configure the Kubernetes cluster
 - make sure you are on a machine with owner permissions to the eks cluster
 - Add the user / group / roles of the aws account to be able to see information and run commands through jenkins etc..

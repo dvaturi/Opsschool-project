@@ -41,7 +41,7 @@ node('slave1 || slave2') {
         end = "failure"
         currentBuild.result = "FAILURE"
         } finally {
-            slackSend color: slackColor, message: "Destroy finished with ${end}: ${env.JOB_NAME} #${env.BUILD_NUMBER}"
+            slackSend color: slackColor, message: "Destroy_app finished with ${end}: build number#${env.BUILD_NUMBER}"
         }
     }
 }
