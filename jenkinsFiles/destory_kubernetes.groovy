@@ -13,7 +13,7 @@ node('slave1 || slave2') {
     stage("uninstall kandula service"){
         sh '''
             echo "deleting kandula service"
-            if kubectl get svc kandula-service -n kandula; then
+            if kubectl get svc backend-service -n kandula; then
                 kubectl delete -f ./kubeFiles/kandula_service.yaml -n kandula
             else
                 echo "kandula service is not available"
@@ -24,7 +24,7 @@ node('slave1 || slave2') {
     stage("uninstall kandula deployment") {
         sh '''
             echo "deleting kandula deployment"
-            if kubectl get deploy kandula-deployment -n kandula; then
+            if kubectl get deploy kandula-prod -n kandula; then
                 kubectl delete -f ./kubeFiles/kandula-deployment.yaml  -n kandula
             else
                 echo "kandula deployment is not available"
