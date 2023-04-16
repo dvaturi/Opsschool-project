@@ -22,9 +22,9 @@ node('slave1 || slave2') {
         end = "success"
         try {
         } catch (Exception e) {
-        slackColor = "danger"
-        end = "failure"
-        currentBuild.result = "FAILURE"
+            slackColor = "danger"
+            end = "failure"
+            currentBuild.result = "FAILURE"
         } finally {
             slackSend color: slackColor, message: "deploy_app finished with ${end}: build number#${env.BUILD_NUMBER}"
         }
