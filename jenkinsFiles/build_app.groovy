@@ -42,12 +42,16 @@ node('slave1 || slave2') {
     }
     
 
-    post {
-        success {
-            slackSend channel: '#webhooks', color: 'good', message: "build_app pipeline is completed successfully"
-        }
-        failure {
-            slackSend channel: '#webhooks', color: 'danger', message: "build_app pipeline is failed"
+    stage("slack notification") {
+        slackColor = "good"
+        end = "success"
+        try {
+        } catch (Exception e) {
+        slackColor = "danger"
+        end = "failure"
+        currentBuild.result = "FAILURE"
+        } finally {
+            slackSend color: slackColor, message: "build finished with ${end}: ${env.JOB_NAME} #${env.BUILD_NUMBER}"
         }
     }
     
