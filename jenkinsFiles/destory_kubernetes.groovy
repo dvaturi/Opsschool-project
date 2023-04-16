@@ -6,8 +6,8 @@ node('slave1 || slave2') {
     stage("uninstall kondula app"){
         sh '''
             echo "deleting service & app pods"
-            kubectl delete -f ./kubeFiles/kandula_service.yaml
-            kubectl delete -f ./kubeFiles/kandula_deploy.yaml
+            kubectl delete -f .kubeFiles/kandula_service.yaml
+            kubectl delete -f .kubeFiles/kandula_deploy.yaml
         '''   
     }
 
