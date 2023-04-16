@@ -5,6 +5,7 @@
 - Creat Docker Hub creds - username and password (dockerhub account, in the id type "dockerhub")
 - Create Github SSH creds - ssh (use "jenkins" user and "cloud9-github-integration.pem" ssh key, since its configured in github)
 - Create jenkins slave SSH creds ssh (use "ubuntu" user and "opsschoolproject.pem" ssh key since its the keypair for the slaves)
+- Create slack secret txt - "KFLek94samnZvN6AIC0j9DYr"
 - Create K8 creds - create secret text with the output of "cat home/ubuntu/.kube/config"
 
 # Configure your 2 slaves (Do it twice 1. slave1 2. Slave2)

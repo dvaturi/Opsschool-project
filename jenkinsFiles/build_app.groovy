@@ -41,4 +41,14 @@ node('slave1 || slave2') {
        container.stop()
     }
     
+
+    post {
+        success {
+            slackSend channel: '#webhooks', color: 'good', message: "build_app pipeline is completed successfully"
+        }
+        failure {
+            slackSend channel: '#webhooks', color: 'danger', message: "build_app pipeline is failed"
+        }
+    }
+    
 }

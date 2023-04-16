@@ -32,10 +32,12 @@ node('slave1 || slave2') {
         '''   
     }
 
-    stage("removing github repo") {
-        sh '''
-            echo "deleting github repo"
-            rm -rf ../Opsschool-project
-        '''   
+    post {
+        success {
+            slackSend channel: '#webhooks', color: 'good', message: "Destroy_kubernetes pipeline for the following cluster ${params.CLUSTER_NAME} completed successfully"
+        }
+        failure {
+            slackSend channel: '#webhooks', color: 'danger', message: "Destroy_kubernetes pipeline for the following cluster ${params.CLUSTER_NAME} failed"
+        }
     }
 }
