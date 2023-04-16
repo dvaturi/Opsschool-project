@@ -24,8 +24,8 @@ node('slave1 || slave2') {
     stage("uninstall kandula deployment") {
         sh '''
             echo "deleting kandula deployment"
-            if kubectl get deploy kandula-deployment -n your-namespace; then
-                kubectl delete deploy kandula-deployment -n your-namespace
+            if kubectl get deploy kandula-deployment -n kandula; then
+                kubectl delete deploy kandula-deployment -n kandula
             else
                 echo "kandula deployment is not available"
             fi
