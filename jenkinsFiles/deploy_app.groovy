@@ -4,11 +4,9 @@ node('slave1 || slave2') {
     }
     
     stage('deploy app'){
-        steps {
             sh '''     
                 kubectl apply -f  ./Opsschool-project/kubeFiles/kandula_deploy.yaml
                 kubectl apply -f  ./Opsschool-project/kubeFiles/kandula_service.yaml
             '''
-        }
     }
 }
