@@ -1,0 +1,43 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+      {
+          "Effect": "Allow",
+          "Action": "ec2:DescribeInstances",
+          "Resource": "*"
+      },
+      {
+          "Effect": "Allow",
+          "Action": "eks:UpdateKubeconfig",
+          "Resource": "*"
+      },
+      {
+          "Effect": "Allow",
+          "Action": [
+              "eks:DescribeCluster",
+              "eks:ListClusters",
+              "eks:ListFargateProfiles",
+              "eks:ListNodegroups",
+              "eks:ListNodegroups",
+              "eks:ListUpdates",
+              "eks:DescribeFargateProfile",
+              "eks:DescribeNodegroup",
+              "eks:DescribeUpdate"
+          ],
+          "Resource": "*"
+      },
+      {
+          "Effect": "Allow",
+          "Action": [
+              "kubernetes:Get*",
+              "kubernetes:List*",
+              "kubernetes:Watch*",
+              "kubernetes:Create",
+              "kubernetes:Update",
+              "kubernetes:Patch",
+              "kubernetes:Delete"
+          ],
+          "Resource": "*"
+      }
+  ]
+}

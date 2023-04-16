@@ -1,7 +1,0 @@
----
-# handlers file for docker-role
-- name: restart docker
-  ansible.builtin.service:
-    name: docker
-    state: restarted
-  listen: "restart docker service"

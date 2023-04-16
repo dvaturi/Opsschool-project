@@ -3,34 +3,42 @@
     msg:
     - "Running on {{ hostvars[inventory_hostname].tags.Name }}"
 
-- name: installing jenkins 1/8
+- name: installing jenkins 1/6
   become: true
   shell: sudo apt-get update -y
 
-- name: installing jenkins 2/8
+- name: installing jenkins 2/6
   become: true
   shell: sudo apt install docker.io -y
 
-- name: installing jenkins 3/8
+- name: installing jenkins 3/6
   become: true
   shell: sudo systemctl start docker
 
-- name: installing jenkins 4/8
+- name: installing jenkins 4/6
   become: true
   shell: sudo usermod -aG docker ubuntu
 
-- name: installing jenkins 5/8
+- name: installing jenkins 5/6
   become: true
   shell: mkdir -p /home/ubuntu/jenkins_home
 
-- name: installing jenkins 6/8
+- name: installing jenkins 6/6
   become: true
   shell: sudo chown -R 1000:1000 /home/ubuntu/jenkins_home
 
-- name: installing jenkins 7/8
+- name: installing trivy 1/2
   become: true
   shell: sudo wget https://github.com/aquasecurity/trivy/releases/download/v0.18.3/trivy_0.18.3_Linux-64bit.deb
 
-- name: installing jenkins 8/8
+- name: installing trivy 2/2
   become: true
   shell: sudo dpkg -i trivy_0.18.3_Linux-64bit.deb
+
+- name: installing kubectl 1/2
+  become: true
+  shell: curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.23.17/bin/linux/amd64/kubectl
+
+- name: installing kubectl 2/2
+  become: true
+  shell: sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl

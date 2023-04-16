@@ -7,7 +7,7 @@ resource "aws_instance" "bastion" {
   associate_public_ip_address = true
   subnet_id = element(module.vpc_module.public_subnets_id, count.index)
   vpc_security_group_ids = [aws_security_group.bastion_sg.id]
-  iam_instance_profile   = aws_iam_instance_profile.consul-join.name
+  iam_instance_profile   = aws_iam_instance_profile.bastion.name
 
   provisioner "file" {
     source      = var.source_ansible_folder_path
@@ -96,4 +96,30 @@ resource "aws_security_group_rule" "bastion_outbound_anywhere" {
   to_port           = 0
   type              = "egress"
   cidr_blocks       = var.internet_cidr
+}
+
+# Create an IAM role for bastion
+resource "aws_iam_role" "bastion" {
+  name               = "bastion"
+  assume_role_policy = file("${path.module}/templates/policies/assume-role.json")
+}
+
+# Create the policy
+resource "aws_iam_policy" "bastion" {
+  name        = "bastion"
+  description = "Allows Consul nodes to describe instances for joining."
+  policy      = file("${path.module}/templates/policies/describe-instances.json")
+}
+
+# Attach the policy
+resource "aws_iam_policy_attachment" "bastion" {
+  name       = "bastion"
+  roles      = [aws_iam_role.bastion.name]
+  policy_arn = aws_iam_policy.bastion.arn
+}
+
+# Create the instance profile
+resource "aws_iam_instance_profile" "bastion" {
+  name  = "bastion"
+  role = aws_iam_role.bastion.name
 }

@@ -41,5 +41,8 @@ ssh -i "~/.ssh/opsschoolproject" ubuntu@ip.of.the.bastion
 cd ansible
 ansible-playbook all.yaml
 ```
-## Configure Jenkins mater and 2 slaves
+## Configure Jenkins master and 2 slaves
 - Follow the instructions in order to configure Jenkins [Jenkins_config](https://github.com/dvaturi/Opsschool-project/blob/main/Jenkins_config.md)
+
+## Run the app
+- Run both jenkins jobs build_app first in order to create the docker file and push it to dockerhub then deploy_app in order to deploy the app to the EKS cluster.

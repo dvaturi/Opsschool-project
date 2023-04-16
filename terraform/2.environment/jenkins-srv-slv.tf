@@ -5,7 +5,7 @@ resource "aws_instance" "jenkins_server" {
   instance_type = var.instance_type
   key_name = var.key_name
   vpc_security_group_ids = [aws_security_group.jenkins_sg.id, aws_security_group.consul_sg.id]
-  iam_instance_profile   = aws_iam_instance_profile.consul-join.name
+  iam_instance_profile   = aws_iam_instance_profile.jenkins.name
   subnet_id = element(module.vpc_module.private_subnets_id, 0)
   user_data = "jenkins_master"
 
@@ -26,7 +26,7 @@ resource "aws_instance" "jenkins_slave" {
   instance_type = var.instance_type
   key_name = var.key_name
   vpc_security_group_ids = [aws_security_group.jenkins_sg.id, aws_security_group.consul_sg.id]
-  iam_instance_profile   = aws_iam_instance_profile.consul-join.name
+  iam_instance_profile   = aws_iam_instance_profile.jenkins.name
   subnet_id = element(module.vpc_module.private_subnets_id, count.index)
   user_data = "jenkins_slave"
 
@@ -94,6 +94,31 @@ resource "aws_security_group_rule" "jenkins_outbound_anywhere" {
   cidr_blocks       = var.internet_cidr
 } 
 
+# Create an IAM role for jenkins
+resource "aws_iam_role" "jenkins" {
+  name               = "jenkins"
+  assume_role_policy = file("${path.module}/templates/policies/assume-role.json")
+}
+
+# Create the policy
+resource "aws_iam_policy" "jenkins" {
+  name        = "jenkins"
+  description = "Allows jenkins to run aws commands and manage eks."
+  policy      = file("${path.module}/templates/policies/ec2-eks-manage.json")
+}
+
+# Attach the policy
+resource "aws_iam_policy_attachment" "jenkins" {
+  name       = "jenkins"
+  roles      = [aws_iam_role.jenkins.name]
+  policy_arn = aws_iam_policy.jenkins.arn
+}
+
+# Create the instance profile
+resource "aws_iam_instance_profile" "jenkins" {
+  name  = "jenkins"
+  role = aws_iam_role.jenkins.name
+}
 
 
 
