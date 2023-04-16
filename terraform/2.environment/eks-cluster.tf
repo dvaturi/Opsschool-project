@@ -31,17 +31,17 @@ eks_managed_node_group_defaults = {
 eks_managed_node_groups = {
     
     group_1 = {
-      min_size     = 2
-      max_size     = 6
-      desired_size = 2
+      min_size     = 1
+      max_size     = 3
+      desired_size = 1
       instance_types = ["t3.medium"]
     }
 
     group_2 = {
-      min_size     = 2
-      max_size     = 6
-      desired_size = 2
-      instance_types = ["t3.large"]
+      min_size     = 1
+      max_size     = 3
+      desired_size = 1
+      instance_types = ["t3.medium"]
 
     }
   }

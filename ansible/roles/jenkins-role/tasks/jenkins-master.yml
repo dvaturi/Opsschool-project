@@ -32,6 +32,10 @@
   become: true
   shell: sudo docker run -d --restart=always -p 8080:8080 -p 50000:50000 --env JENKINS_ADMIN_ID=admin --env JENKINS_ADMIN_PASSWORD=Banana321! dvaturi/jenkins-srv:latest
 
+- name: Copy github ssh key to known hosts on jenkins server 1/1
+  become: true
+  shell: sudo ssh-keyscan github.com | tee -a ~/.ssh/known_hosts
+
 - name: installing aws cli 1/1
   become: true
   shell: sudo apt-get install awscli -y
