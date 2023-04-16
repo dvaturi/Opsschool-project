@@ -30,13 +30,15 @@
 - Add the user / group / roles of the aws account to be able to see information and run commands through jenkins etc..
 - Do it by running the following command **kubectl get configmap aws-auth -n kube-system -o yaml > aws-auth.yaml**
 - After running the command a file called **aws-auth.yaml** will be added to your path, edit it carfuly and add the user/group/role with its permissions in order to provide permissions for the kubernetes cluster as such
-'''mapRoles: |
+```
+mapRoles: |
 ...
  - groups:
       - system:masters
       rolearn: arn:aws:iam::<need to change>:role/jenkins
       username: jenkins
-... '''
+...
+```
 - Run the following command in order to update the kubernetes config map **kubectl apply -f aws-auth.yaml**
 
 # Create 2 jenkins pipeline jobs and make sure you pull the code through remote scm with the github creds
