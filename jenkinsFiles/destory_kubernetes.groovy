@@ -1,11 +1,9 @@
-// install filebaet, node-exporter, 
 node('slave1 || slave2') {
-
     stage('clone git repo'){
         git branch: 'main', changelog: false, credentialsId: 'github', poll: false, url: 'git@github.com:dvaturi/Opsschool-project.git'
     }
 
-    stage("Install Cosnul on Kubernetes") {
+    stage("uninstall kondula app"){
         sh '''
             echo "deleting service & app pods"
             kubectl delete -f ./kubeFiles/kandula_service.yaml
