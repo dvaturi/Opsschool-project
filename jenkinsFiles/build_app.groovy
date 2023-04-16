@@ -47,9 +47,9 @@ node('slave1 || slave2') {
         end = "success"
         try {
         } catch (Exception e) {
-        slackColor = "danger"
-        end = "failure"
-        currentBuild.result = "FAILURE"
+            slackColor = "danger"
+            end = "failure"
+            currentBuild.result = "FAILURE"
         } finally {
             slackSend color: slackColor, message: "build finished with ${end}: ${env.JOB_NAME} #${env.BUILD_NUMBER}"
         }
