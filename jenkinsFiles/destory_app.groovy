@@ -46,16 +46,11 @@ pipeline {
 
 
     post {
-        always {
-            script {
-                try {
-                    slackSend channel: '#webhooks', color: 'good', message: "${env.JOB_NAME} finished with success: build number#${env.BUILD_NUMBER}"
-                } catch (Exception ex) {
-                    currentBuild.result = "FAILED"
-                    slackSend channel: '#webhooks', color: 'danger', message: "${env.BUILD_NAME} failed: build number#${env.BUILD_NUMBER}"
-                }
-            }
+        success {
+            slackSend channel: '#webhooks', color: 'good', message: "${env.JOB_NAME} finished with ${end}: build number#${env.BUILD_NUMBER}"
+        }
+        failure {
+            slackSend channel: '#webhooks', color: 'danger', message: "${env.BUILD_NAME} finished with ${end}: build number#${env.BUILD_NUMBER}"
         }
     }
 }
-
