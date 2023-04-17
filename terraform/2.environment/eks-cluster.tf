@@ -150,3 +150,20 @@ module "iam_iam-assumable-role-with-oidc" {
   role_policy_arns              = ["arn:aws:iam::aws:policy/AmazonEC2FullAccess"]
   oidc_fully_qualified_subjects = ["system:serviceaccount:${local.k8s_service_account_namespace}:${local.k8s_service_account_name}"]
 }
+
+
+# Create the policy
+resource "aws_iam_policy" "eks-cluster" {
+  name        = "EKS-Node-Policy"
+  path        = "/"
+  description = "EKS Node Policy"
+  policy      = file("${path.module}/templates/policies/eks-cluster.json")
+}
+
+# Attach the policy
+resource "aws_iam_role_policy_attachment" "nodes-policy" {
+  depends_on = [module.eks]
+  for_each   = module.eks.eks_managed_node_groups
+  role       = each.value.iam_role_name
+  policy_arn = aws_iam_policy.eks-cluster.arn
+}

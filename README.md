@@ -46,6 +46,10 @@ ansible-playbook all.yaml
 
 ## Configure the Kubernetes cluster
 - make sure you are on a machine with owner permissions to the EKS cluster
+After the environement is up run the following to update your kubeconfig file (you can get the `cluster_name` value from the cluster_name output in terraform)
+```bash
+aws eks --region=us-east-1 update-kubeconfig --name <cluster_name>
+```
 - Add the user/group/roles of the AWS account to be able to see information and run commands through Jenkins etc...
 - Do it by running the following command **kubectl get configmap aws-auth -n kube-system -o yaml > aws-auth.yaml**
 - After running the command a file called **aws-auth.yaml** will be added to your path, edit it carefully and add the user/group/role with its permissions to provide permissions for the Kubernetes cluster as such
