@@ -7,7 +7,6 @@
 - Create GitHub SSH creds - ssh (use id: "github" use "jenkins" user and "cloud9-github-integration.pem" ssh key, since it's configured in github) *dont forget to go to **Manage Jenkins>Configure System>git** and select approve first time of connection.
 - Create Jenkins slave SSH creds ssh (use "ubuntu" user and "opsschoolproject.pem" ssh key since its the keypair for the slaves)
 - Create slack secret txt - (secret: "KFLek94samnZvN6AlC0j9DYr" id:"slack.integration.token" )
-#- Create K8 creds - create secret text with the output of "cat home/ubuntu/.kube/config"
 
 # Configure your 2 slaves (Do it twice 1. slave1 2. Slave2)
 - Go to "**Manage Jenkins**" then add "**+ New Node**"

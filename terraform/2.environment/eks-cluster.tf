@@ -70,7 +70,6 @@ resource "aws_security_group_rule" "allow_ssh" {
  to_port           = 22
  type              = "ingress"
  cidr_blocks = [for ip in data.aws_instance.bastion_private_ips.*.private_ip : "${ip}/32"]
-#  cidr_blocks = [ "10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16" ]
 }
 
 resource "kubernetes_namespace" "kandula" {
@@ -78,68 +77,6 @@ resource "kubernetes_namespace" "kandula" {
     name = "kandula"
   }
 }
-
-
-# resource "aws_security_group_rule" "allow_lan_tcp" {
-#  description       = "Allow LAN TCP access to port 8301"
-#  from_port         = 8301
-#  to_port           = 8301
-#  protocol          = "tcp"
-#  security_group_id = aws_security_group.all_worker_mgmt.id
-# type              = "ingress"
-#  cidr_blocks       = var.cidr_block
-# }
-
-# resource "aws_security_group_rule" "allow_wan_tcp" {
-#  description       = "Allow WAN TCP access to port 8302"
-#  from_port         = 8302
-#  to_port           = 8302
-#  protocol          = "tcp"
-#  security_group_id = aws_security_group.all_worker_mgmt.id
-#  type              = "ingress"
-#  cidr_blocks       = var.cidr_block
-# }
-
-# resource "aws_security_group_rule" "allow_lan_udp" {
-#  description       = "Allow LAN UDP access to port 8301"
-#  from_port         = 8301
-#  to_port           = 8301
-#  protocol          = "udp"
-#  security_group_id = aws_security_group.all_worker_mgmt.id
-#  type              = "ingress"
-#  cidr_blocks       = var.cidr_block
-# }
-
-# resource "aws_security_group_rule" "allow_wan_udp" {
-#  description       = "Allow WAN UDP access to port 8302"
-#  from_port         = 8302
-#  to_port           = 8302
-#  protocol          = "udp"
-#  security_group_id = aws_security_group.all_worker_mgmt.id
-#  type              = "ingress"
-#  cidr_blocks       = var.cidr_block
-# }
-
-# resource "aws_security_group_rule" "allow_consul_dns_tcp" {
-#  description       = "Allow TCP access to Consul DNS on port 8600"
-#  from_port         = 8600
-#  to_port           = 8600
-#  protocol          = "tcp"
-#  security_group_id = aws_security_group.all_worker_mgmt.id
-#  type              = "ingress"
-#  cidr_blocks       = var.cidr_block
-# }
-
-# resource "aws_security_group_rule" "allow_consul_dns_udp" {
-#  description       = "Allow UDP access to Consul DNS on port 8600"
-#  from_port         = 8600
-#  to_port           = 8600
-#  protocol          = "udp"
-#  security_group_id = aws_security_group.all_worker_mgmt.id
-#  type              = "ingress"
-#  cidr_blocks       = var.cidr_block
-# }
-
 
 module "iam_iam-assumable-role-with-oidc" {
   source                        = "terraform-aws-modules/iam/aws//modules/iam-assumable-role-with-oidc"

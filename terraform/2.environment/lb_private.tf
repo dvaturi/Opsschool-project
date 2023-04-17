@@ -2,7 +2,6 @@ resource "aws_lb" "private_services" {
   name               = "privateservices"
   internal           = false
   load_balancer_type = "application"
-  #security_groups    = [aws_security_group.prometheus_grafana.id, aws_security_group.consul_sg.id]
   security_groups    = [aws_security_group.consul_sg.id, aws_security_group.jenkins_sg.id]
   subnets            = module.vpc_module.public_subnets_id
 

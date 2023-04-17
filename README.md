@@ -56,6 +56,11 @@ aws eks --region=us-east-1 update-kubeconfig --name <cluster_name>
 ```
 mapRoles: |
 ...
+
+ - groups:
+      - system:masters
+      rolearn: arn:aws:iam::447072968892:user/opschooladmin
+      username: opsschooladmin
  - groups:
       - system:masters
       rolearn: arn:aws:iam::<need to change>:role/Jenkins
