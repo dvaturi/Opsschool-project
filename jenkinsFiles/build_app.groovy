@@ -1,55 +1,73 @@
-node('slave1 || slave2') {
-    def customImage
-    def container
-    
-    stage('clone git repo'){
-        git branch: 'dean-kandula', changelog: false, credentialsId: 'github', poll: false, url: 'git@github.com:dvaturi/kandula-app-9.git'
+pipeline {
+    agent {
+        node {
+            label 'slave1 || slave2'
+        }
     }
-    
-    stage('build docker image'){
-        customImage = docker.build("dvaturi/kandula:latest")
+    environment {
+        customImage = ''
+        container = ''
     }
-
-    stage('scan image with trivy'){
-        sh "trivy image --timeout 5m --exit-code=0 --severity CRITICAL,HIGH,UNKNOWN,LOW,MEDIUM $customImage.id"
-    }
-    
-    stage('run docker'){
-       container = customImage.run('-p 5000:5000 -e FLASK_APP="bla" -e SECRET_KEY="bla"')
-    }
-    
-    stage('Test application'){
-        sh 'sleep 10'
-        response = sh (script: 'curl -Is localhost:5000 | head -1 | awk \'{print $2}\'', returnStdout: true).trim()
-
-        if ("$response" == "200"){
-            echo "the resonse is ${response}"
-            
-            withDockerRegistry(credentialsId: 'dockerhub') {
-                customImage.push()
-                customImage.push("${BUILD_NUMBER}")
+    stages {
+        stage('clone git repo'){
+            steps {
+                git branch: 'dean-kandula', changelog: false, credentialsId: 'github', poll: false, url: 'git@github.com:dvaturi/kandula-app-9.git'
             }
         }
-        else{
-            container.stop()
-            error("application didnt reutrn 200,  $response")
+        stage('build docker image'){
+            steps {
+                script {
+                    customImage = docker.build("dvaturi/kandula:latest")
+                }
+            }
         }
-        
-    }
-    
-    stage('clean'){
-       container.stop()
-    }
-    
+        stage('scan image with trivy'){
+            steps {
+                sh "trivy image --timeout 5m --exit-code=0 --severity CRITICAL,HIGH,UNKNOWN,LOW,MEDIUM $customImage.id"
+            }
+        }
+        stage('run docker'){
+            steps {
+                script {
+                    container = customImage.run('-p 5000:5000 -e FLASK_APP="bla" -e SECRET_KEY="bla"')
+                }
+            }
+        }
+        stage('Test application'){
+            steps {
+                sh 'sleep 10'
+                response = sh (script: 'curl -Is localhost:5000 | head -1 | awk \'{print $2}\'', returnStdout: true).trim()
 
-    stage("slack notification") {
-        slackColor = "good"
-        end = "success"
-        if (currentBuild.result == "FAILURE") {
-          slackColor = "danger"
-          end = "failure"
+                if ("$response" == "200"){
+                    echo "the resonse is ${response}"
+                    script {
+                        withDockerRegistry(credentialsId: 'dockerhub') {
+                            customImage.push()
+                            customImage.push("${BUILD_NUMBER}")
+                        }
+                    }
+                }
+                else{
+                    container.stop()
+                    error("application didnt reutrn 200,  $response")
+                }
+            }
         }
-        slackSend color: slackColor, message: "Build_app finished with ${end}: build number#${env.BUILD_NUMBER}"
+        stage('clean'){
+            steps {
+                container.stop()
+            }
+        }
+    }
+
+    post {
+        success {
+            slackSend channel: '#webhooks', color: 'good', message: "${env.JOB_NAME} finished with ${currentBuild.currentResult}: build number#${env.BUILD_NUMBER}"
+        }
+        failure {
+            slackSend channel: '#webhooks', color: 'danger', message: "${env.JOB_NAME} finished with ${currentBuild.currentResult}: build number#${env.BUILD_NUMBER}"
+        }
     }
 }
-    
+
+

@@ -50,7 +50,7 @@ pipeline {
             slackSend channel: '#webhooks', color: 'good', message: "${env.JOB_NAME} finished with ${currentBuild.currentResult}: build number#${env.BUILD_NUMBER}"
         }
         failure {
-            slackSend channel: '#webhooks', color: 'danger', message: "${env.BUILD_NAME} finished with ${currentBuild.currentResult}: build number#${env.BUILD_NUMBER}"
+            slackSend channel: '#webhooks', color: 'danger', message: "${env.JOB_NAME} finished with ${currentBuild.currentResult}: build number#${env.BUILD_NUMBER}"
         }
     }
 }
