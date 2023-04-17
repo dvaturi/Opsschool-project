@@ -69,4 +69,5 @@ mapRoles: |
 - cd Opsschool-project/terraform/2.environment and "terraform destroy -auto-approve"
 - go to the s3 service in the AWS UI, and look for the following s3 bucket: "opsschool-terraform-state-dean" Get in and delete all the state files **including the versioning**
 - cd Opsschool-project/terraform/1.s3_creation and "terraform destroy -auto-approve"
+- delete the file **Opsschool-project/terraform/2.environment/aws-auth.yaml** - its the old permissions file for the EKS cluster you just deleted.
 - That's it, you are done and the project has been destroyed completely 
