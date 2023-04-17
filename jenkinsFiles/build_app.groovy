@@ -1,4 +1,4 @@
-pipeline {
+  pipeline {
     agent {
         node {
             label 'slave1 || slave2'
@@ -35,22 +35,21 @@ pipeline {
         }
         stage('Test application'){
             steps {
-                sh 'sleep 10'
-                response = sh (script: 'curl -Is localhost:5000 | head -1 | awk \'{print $2}\'', returnStdout: true).trim()
+sh 'sleep 10'
+        response = sh (script: 'curl -Is localhost:5000 | head -1 | awk \'{print $2}\'', returnStdout: true).trim()
 
-                if ("$response" == "200"){
-                    echo "the resonse is ${response}"
-                    script {
-                        withDockerRegistry(credentialsId: 'dockerhub') {
-                            customImage.push()
-                            customImage.push("${BUILD_NUMBER}")
-                        }
-                    }
-                }
-                else{
-                    container.stop()
-                    error("application didnt reutrn 200,  $response")
-                }
+        if ("$response" == "200"){
+            echo "the resonse is ${response}"
+            
+            withDockerRegistry(credentialsId: 'dockerhub') {
+                customImage.push()
+                customImage.push("${BUILD_NUMBER}")
+            }
+        }
+        else{
+            container.stop()
+            error("application didnt reutrn 200,  $response")
+        }
             }
         }
         stage('clean'){
