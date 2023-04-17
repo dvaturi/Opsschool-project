@@ -15,15 +15,15 @@
 - Change the ```key_name``` to your requested region (default: ```opsschoolproject```)
 - Change the ```instance_type``` to your requested region (default: ```t2.micro```)
 
-## Run terrafrom
-Run the following to bring the s3 bucket up (for env tfstate file):
+## Run Terraform
+Run the following to bring the s3 bucket up (for the env tfstate file):
 ```bash
 cd terraform/1.s3_creation/
 terraform init
 terraform apply --auto-approve
 ```
 
-Run the following to bring environment up:
+Run the following to bring the environment up:
 ```bash
 cd terraform/2.environment/
 terraform init
@@ -36,13 +36,37 @@ terraform apply --auto-approve
 ssh -i "~/.ssh/opsschoolproject" ubuntu@ip.of.the.bastion
 ```
 
-## Run ansible
+## Run Ansible
 ```bash
 cd ansible
 ansible-playbook all.yaml
 ```
 ## Configure Jenkins master and 2 slaves
-- Follow the instructions in order to configure Jenkins [Jenkins_config](https://github.com/dvaturi/Opsschool-project/blob/main/Jenkins_config.md)
+- Follow the instructions to configure Jenkins [Jenkins_config](https://github.com/dvaturi/Opsschool-project/blob/main/Jenkins_config.md)
+
+## Configure the Kubernetes cluster
+- make sure you are on a machine with owner permissions to the EKS cluster
+- Add the user/group/roles of the AWS account to be able to see information and run commands through Jenkins etc...
+- Do it by running the following command **kubectl get configmap aws-auth -n kube-system -o yaml > aws-auth.yaml**
+- After running the command a file called **aws-auth.yaml** will be added to your path, edit it carefully and add the user/group/role with its permissions to provide permissions for the Kubernetes cluster as such
+```
+mapRoles: |
+...
+ - groups:
+      - system:masters
+      rolearn: arn:aws:iam::<need to change>:role/Jenkins
+      username: Jenkins
+...
+```
+- Run the following command to update the Kubernetes config map **kubectl apply -f aws-auth.yaml**
+
 
 ## Run the app
-- Run both jenkins jobs build_app first in order to create the docker file and push it to dockerhub then deploy_app in order to deploy the app to the EKS cluster.
+- Run both Jenkins jobs build_app first to create the docker file and push it to the docker hub then deploy_app to deploy the app to the EKS cluster.
+
+## Destroy env
+- Run destroy_app Jenkins job to destroy the app inside of the EKS cluster.
+- cd Opsschool-project/terraform/2.environment and "terraform destroy -auto-approve"
+- go to the s3 service in the AWS UI, and look for the following s3 bucket: "opsschool-terraform-state-dean" Get in and delete all the state files **including the versioning**
+- cd Opsschool-project/terraform/1.s3_creation and "terraform destroy -auto-approve"
+- That's it, you are done and the project has been destroyed completely 
