@@ -28,9 +28,21 @@
   become: true
   shell: sudo chown -R 1000:1000 /home/ubuntu/jenkins_home
 
+#- name: installing jenkins 7/7
+#  become: true
+#  shell: sudo docker run -d --restart=always -p 8080:8080 -p 50000:50000 --env JENKINS_ADMIN_ID=admin --env JENKINS_ADMIN_PASSWORD=Banana321! dvaturi/jenkins-srv:latest
+
 - name: installing jenkins 7/7
   become: true
-  shell: sudo docker run -d --restart=always -p 8080:8080 -p 50000:50000 --env JENKINS_ADMIN_ID=admin --env JENKINS_ADMIN_PASSWORD=Banana321! dvaturi/jenkins-srv:latest
+  vars_prompt:
+    - name: JENKINS_ADMIN_ID
+      prompt: "Enter Jenkins admin ID"
+      private: no
+    - name: JENKINS_ADMIN_PASSWORD
+      prompt: "Enter Jenkins admin password"
+      private: yes
+  shell: sudo docker run -d --restart=always -p 8080:8080 -p 50000:50000 --env JENKINS_ADMIN_ID={{ JENKINS_ADMIN_ID }} --env JENKINS_ADMIN_PASSWORD={{ JENKINS_ADMIN_PASSWORD }} dvaturi/jenkins-srv:latest
+
 
 - name: Copy github ssh key to known hosts on jenkins server 1/1
   become: true
