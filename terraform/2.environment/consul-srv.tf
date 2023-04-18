@@ -17,7 +17,6 @@ resource "aws_instance" "consul_server" {
   }
 }
 
-
 #Creating Security Group
 resource "aws_security_group" "consul_sg" {
   name = "consul-access"
@@ -51,6 +50,36 @@ resource "aws_security_group_rule" "consul_ssh_access" {
   cidr_blocks = [for ip in data.aws_instance.bastion_private_ips.*.private_ip : "${ip}/32"]
 }
 
+resource "aws_security_group_rule" "consul_rpc_tcp" {
+  description       = "Server RPC address"
+  from_port         = 8300
+  protocol          = "tcp"
+  security_group_id = aws_security_group.consul_sg.id
+  to_port           = 8300
+  type              = "ingress"
+  cidr_blocks = var.consul_cidr_block
+}
+
+resource "aws_security_group_rule" "consul_lan_tcp" {
+  description       = "The Serf LAN port"
+  from_port         = 8301
+  protocol          = "tcp"
+  security_group_id = aws_security_group.consul_sg.id
+  to_port           = 8301
+  type              = "ingress"
+  cidr_blocks = var.consul_cidr_block
+}
+
+resource "aws_security_group_rule" "consul_lan_udp" {
+  description       = "The Serf LAN port"
+  from_port         = 8301
+  protocol          = "udp"
+  security_group_id = aws_security_group.consul_sg.id
+  to_port           = 8301
+  type              = "ingress"
+  cidr_blocks = var.consul_cidr_block
+}
+
 resource "aws_security_group_rule" "allow_consul_ui_access_from_world" {
   description       = "Allow consul UI access from the world"
   from_port         = 8500
@@ -59,6 +88,26 @@ resource "aws_security_group_rule" "allow_consul_ui_access_from_world" {
   to_port           = 8500
   type              = "ingress"
   cidr_blocks = var.internet_cidr
+}
+
+resource "aws_security_group_rule" "consul_dns_tcp" {
+  description       = "The DNS server"
+  from_port         = 8600
+  protocol          = "tcp"
+  security_group_id = aws_security_group.consul_sg.id
+  to_port           = 8600
+  type              = "ingress"
+  cidr_blocks = var.consul_cidr_block
+}
+
+resource "aws_security_group_rule" "consul_dns_udp" {
+  description       = "The DNS server"
+  from_port         = 8600
+  protocol          = "udp"
+  security_group_id = aws_security_group.consul_sg.id
+  to_port           = 8600
+  type              = "ingress"
+  cidr_blocks = var.consul_cidr_block
 }
 
 resource "aws_security_group_rule" "consul_outbound_anywhere" {
