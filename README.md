@@ -96,3 +96,6 @@ mapRoles: |
 - [6.eks cluster config and build job](https://drive.google.com/file/d/14s4fQ49VeZBOvvmYuhrbJvNyM2ejhHOw/view?usp=share_link)
 - [7.deploy job](https://drive.google.com/file/d/1j4hOWDwtI0t57c-3p94JcZYcWIOBOSDQ/view?usp=share_link)
 - [8.kandula app](https://drive.google.com/file/d/1oxFrSfpGPCmUMjIQxGEyW4D7FWYwGhQc/view?usp=share_link)
+
+## Presentation
+- [Link](https://www.canva.com/design/DAFgeyxQBVo/WulIo7wy20_pV5dBShm8pA/view?utm_content=DAFgeyxQBVo&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink)
