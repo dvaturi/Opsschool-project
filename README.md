@@ -76,7 +76,7 @@ mapRoles: |
 - Run both Jenkins jobs build_app first to create the docker file and push it to the docker hub then deploy_app to deploy the app to the EKS cluster.
 
 ## App is running
-- Go to AWS UI and look for the eks loadbalancer that has been created, copy its external dns name and post it in your browser.
+- Go to AWS UI and look for the EKS loadbalancer that has been created, copy its external dns name and post it in your browser.
 - ENJOY!
 
 ## Destroy env
