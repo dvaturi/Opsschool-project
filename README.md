@@ -1,7 +1,9 @@
 # START ENVIRONMENT
-![Untitled drawio (7)](https://user-images.githubusercontent.com/57751780/230970493-acc7a77a-a4a7-49c9-b2db-fbaef04dd323.png)
+## infrastructure diagram
+![Untitled drawio (8)](https://user-images.githubusercontent.com/57751780/232642303-9b27622d-18ce-4222-a1cf-e0a19b7b5e3e.png)
 
-
+## Project Workflow diagram
+![CI_CD flow diagram drawio](https://user-images.githubusercontent.com/57751780/232643071-8e1407cd-3d85-477b-85bf-ab9fc41648f5.png)
 
 ## Prerequisites
 - Install [Terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli) on your workstation/server
