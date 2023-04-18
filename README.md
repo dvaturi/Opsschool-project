@@ -82,3 +82,13 @@ mapRoles: |
 - cd Opsschool-project/terraform/1.s3_creation and "terraform destroy -auto-approve"
 - delete the file **Opsschool-project/terraform/2.environment/aws-auth.yaml** - its the old permissions file for the EKS cluster you just deleted.
 - That's it, you are done and the project has been destroyed completely 
+
+## Full Project Workflow videos.
+- [1.s3 bucket creation](https://drive.google.com/file/d/1hTJXzo2EjZOdMbla9gXBNNsCqfVdA5iq/view?usp=share_link)
+- [2.environment creation](https://drive.google.com/file/d/1TYrkyh5RcH_Zp9mEOhlDJ1DZlIaRpZtF/view?usp=share_link)
+- [3.ansible playbook install](https://drive.google.com/file/d/1ZBCIEv_W3vqhVJnr9Qi-XF6dMBGIWWtF/view?usp=share_link)
+- [4.consul and jenkins](https://drive.google.com/file/d/1dyvXf9tzAQx1Oq3DHeibXQpRZQdAZDYw/view?usp=share_link)
+- [5.jenkins config](https://drive.google.com/file/d/1T2IbhbNCEMw11Do6ZTyJg-2hqFOnp1ER/view?usp=share_link)
+- [6.eks cluster config and build job](https://drive.google.com/file/d/14s4fQ49VeZBOvvmYuhrbJvNyM2ejhHOw/view?usp=share_link)
+- [7.deploy job](https://drive.google.com/file/d/1j4hOWDwtI0t57c-3p94JcZYcWIOBOSDQ/view?usp=share_link)
+- [8.kandula app](https://drive.google.com/file/d/1oxFrSfpGPCmUMjIQxGEyW4D7FWYwGhQc/view?usp=share_link)
