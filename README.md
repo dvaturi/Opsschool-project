@@ -75,6 +75,10 @@ mapRoles: |
 ## Run the app
 - Run both Jenkins jobs build_app first to create the docker file and push it to the docker hub then deploy_app to deploy the app to the EKS cluster.
 
+## App is running
+- Go to AWS UI and look for the eks loadbalancer that has been created, copy its external dns name and post it in your browser.
+- ENJOY!
+
 ## Destroy env
 - Run destroy_app Jenkins job to destroy the app inside of the EKS cluster.
 - cd Opsschool-project/terraform/2.environment and "terraform destroy -auto-approve"
