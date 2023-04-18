@@ -98,4 +98,4 @@ mapRoles: |
 - [8.kandula app](https://drive.google.com/file/d/1oxFrSfpGPCmUMjIQxGEyW4D7FWYwGhQc/view?usp=share_link)
 
 ## Presentation
-- [Link](https://www.canva.com/design/DAFgeyxQBVo/WulIo7wy20_pV5dBShm8pA/view?utm_content=DAFgeyxQBVo&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink)
+- [Opsschool-project](https://www.canva.com/design/DAFgeHdqtSM/BhetdisapEf_H_hYgj7e8w/view?utm_content=DAFgeHdqtSM&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink)
