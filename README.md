@@ -1,6 +1,7 @@
 # START ENVIRONMENT
 ## infrastructure diagram
-![Untitled drawio (9)](https://user-images.githubusercontent.com/57751780/233060719-42f9eb2d-1cb7-4921-bbf3-a8d91ee1bd68.png)
+![Untitled drawio (10)](https://user-images.githubusercontent.com/57751780/233061445-ab1618db-3472-4f3c-af76-32df9ce588ba.png)
+
 
 ## Project Workflow diagram
 ![CI_CD flow diagram drawio](https://user-images.githubusercontent.com/57751780/232643071-8e1407cd-3d85-477b-85bf-ab9fc41648f5.png)
