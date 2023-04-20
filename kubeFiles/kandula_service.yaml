@@ -5,11 +5,11 @@ metadata:
   namespace: kandula # namespace added
   labels:
     app: backend
-    env: prod
+    # env: prod
 spec:
   selector:
     app: backend
-    env: prod
+    # env: prod
   type: LoadBalancer
   ports:
     - name: http

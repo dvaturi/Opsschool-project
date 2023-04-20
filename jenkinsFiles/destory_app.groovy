@@ -35,7 +35,7 @@ pipeline {
             steps {
                 sh '''
                     echo "deleting kandula deployment"
-                    if kubectl get deploy kandula-prod -n kandula; then
+                    if kubectl get deploy kandula -n kandula; then
                     kubectl delete -f ./kubeFiles/kandula_deploy.yaml  -n kandula
                     else
                         echo "kandula deployment is not available"
