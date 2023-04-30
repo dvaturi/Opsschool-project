@@ -1,6 +1,6 @@
 pipeline {
     agent {
-        label 'slave1 || slave2'
+        label 'slaves'
     }
     stages {
         stage('clone git repo'){
