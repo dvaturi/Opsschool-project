@@ -59,10 +59,14 @@ variable "jenkins_master_instances_count" {
 }
 
 variable "jenkins_slave_instances_count" {
-  description = "The number of jenkins server instances to create"
+  description = "The number of jenkins slave instances to create"
   default     = 2
 }
 
+variable "promethus_server_count" {
+  description = "The number of promethus and grafana server instances to create"
+  default = 1
+}
 
 variable "internet_cidr" {
   type = list(string)

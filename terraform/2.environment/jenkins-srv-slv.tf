@@ -6,7 +6,8 @@ resource "aws_instance" "jenkins_server" {
   key_name = var.key_name
   vpc_security_group_ids = [aws_security_group.jenkins_sg.id, aws_security_group.consul_sg.id]
   iam_instance_profile   = aws_iam_instance_profile.jenkins.name
-  subnet_id = element(module.vpc_module.private_subnets_id, 0)
+  # subnet_id = element(module.vpc_module.private_subnets_id, 0)
+  subnet_id = element(module.vpc_module.private_subnets_id, count.index)
   user_data = "jenkins_master"
 
   tags = {
