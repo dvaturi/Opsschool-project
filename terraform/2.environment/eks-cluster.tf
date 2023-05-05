@@ -72,6 +72,87 @@ resource "aws_security_group_rule" "allow_ssh" {
  cidr_blocks = [for ip in data.aws_instance.bastion_private_ips.*.private_ip : "${ip}/32"]
 }
 
+resource "aws_security_group_rule" "prometheus_tcp" {
+  description       = "Allow Prometheus TCP access"
+  from_port         = 9100
+  to_port           = 9100
+  protocol          = "tcp"
+  security_group_id = module.security-group.all_worker_mgmt_sg.id
+  type              = "ingress"
+  cidr_blocks = var.internet_cidr
+}
+
+resource "aws_security_group_rule" "prometheus_http" {
+  description       = "Allow Prometheus HTTP access"
+  from_port         = 8500
+  to_port           = 8500
+  protocol          = "tcp"
+  security_group_id = module.security-group.all_worker_mgmt_sg.id
+  type              = "ingress"
+  cidr_blocks = var.internet_cidr
+}
+
+resource "aws_security_group_rule" "lan_tcp" {
+  description       = "Allow LAN TCP access"
+  from_port         = 8301
+  to_port           = 8301
+  protocol          = "tcp"
+  security_group_id = module.security-group.all_worker_mgmt_sg.id
+  type              = "ingress"
+  cidr_blocks = var.internet_cidr
+}
+
+resource "aws_security_group_rule" "wan_tcp" {
+  description       = "Allow WAN TCP access"
+  from_port         = 8302
+  to_port           = 8302
+  protocol          = "tcp"
+  security_group_id = module.security-group.all_worker_mgmt_sg.id
+  type              = "ingress"
+  cidr_blocks = var.internet_cidr
+}
+
+resource "aws_security_group_rule" "lan_udp" {
+  description       = "Allow LAN UDP access"
+  from_port         = 8301
+  to_port           = 8301
+  protocol          = "udp"
+  security_group_id = module.security-group.all_worker_mgmt_sg.id
+  type              = "ingress"
+  cidr_blocks = var.internet_cidr
+}
+
+resource "aws_security_group_rule" "wan_udp" {
+  description       = "Allow WAN UDP access"
+  from_port         = 8302
+  to_port           = 8302
+  protocol          = "udp"
+  security_group_id = module.security-group.all_worker_mgmt_sg.id
+  type              = "ingress"
+  cidr_blocks = var.internet_cidr
+}
+
+resource "aws_security_group_rule" "consul_dns_tcp" {
+  description       = "Allow Consul DNS TCP access"
+  from_port         = 8600
+  to_port           = 8600
+  protocol          = "tcp"
+  security_group_id = module.security-group.all_worker_mgmt_sg.id
+  type              = "ingress"
+  cidr_blocks = var.internet_cidr
+}
+
+resource "aws_security_group_rule" "consul_dns_udp" {
+  description       = "Allow Consul DNS UDP access"
+  from_port         = 8600
+  to_port           = 8600
+  protocol          = "udp"
+  security_group_id = module.security-group.all_worker_mgmt_sg.id
+  type              = "ingress"
+  cidr_blocks = var.internet_cidr
+}
+
+
 resource "kubernetes_namespace" "kandula" {
   metadata {
     name = "kandula"
