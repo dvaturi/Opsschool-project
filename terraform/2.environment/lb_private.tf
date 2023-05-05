@@ -77,5 +77,105 @@ resource "aws_lb_listener" "jenkins_server" {
   }
 }
 
+### listener rule - Prometheus
 
+resource "aws_lb_target_group" "prometheus_server" {
+  name        = "Prometheus"
+  port        = 9090
+  protocol    = "HTTP"
+  target_type = "instance"
+  vpc_id = module.vpc_module.vpc_id
+  
+  health_check {
+    port     = 9090
+    protocol = "HTTP"
+    path     = "/-/healthy"
+}
+}
+
+resource "aws_lb_target_group_attachment" "prometheus_server" {
+  count = var.prometheus_server_count
+  target_group_arn = aws_lb_target_group.prometheus_server.arn
+  target_id        = aws_instance.prometheus_server[count.index].id
+  port             = 9090
+}
+
+resource "aws_lb_listener" "prometheus_server" {
+  load_balancer_arn = aws_lb.private_services.arn
+  port              = "9090"
+  protocol          = "HTTP"
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.prometheus_server.arn
+  }
+}
+
+### listener rule - Grafana
+
+resource "aws_lb_target_group" "grafana_server" {
+  name        = "Grafana"
+  port        = 3000
+  protocol    = "HTTP"
+  target_type = "instance"
+  vpc_id = module.vpc_module.vpc_id
+  
+  health_check {
+    port     = 3000
+    protocol = "HTTP"
+    path     = "/-/healthy"
+}
+}
+
+resource "aws_lb_target_group_attachment" "grafana_server" {
+  count = var.prometheus_server_count
+  target_group_arn = aws_lb_target_group.grafana_server.arn
+  target_id        = aws_instance.prometheus_server[count.index].id
+  port             = 3000
+}
+
+resource "aws_lb_listener" "grafana_server" {
+  load_balancer_arn = aws_lb.private_services.arn
+  port              = "3000"
+  protocol          = "HTTP"
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.grafana_server.arn
+  }
+}
+
+### listener rule - Kibana
+
+resource "aws_lb_target_group" "kibana_server" {
+  name        = "Kibana"
+  port        = 5601
+  protocol    = "HTTP"
+  target_type = "instance"
+  vpc_id = module.vpc_module.vpc_id
+  
+  health_check {
+    port     = 5601
+    protocol = "HTTP"
+    # path     = "/-/healthy"
+  }
+}
+
+resource "aws_lb_target_group_attachment" "kibana_server" {
+  count = var.elasticsearch_server_count
+  target_group_arn = aws_lb_target_group.kibana_server.arn
+  target_id        = aws_instance.elasticsearch_server[count.index].id
+  port             = 5601
+}
+
+resource "aws_lb_listener" "kibana_server" {
+  load_balancer_arn = aws_lb.private_services.arn
+  port              = "5601"
+  protocol          = "HTTP"
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.kibana_server.arn
+  }
+}
 

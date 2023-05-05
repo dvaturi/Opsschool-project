@@ -1,6 +1,6 @@
 #Creating promethus and grafana servers instances
-resource "aws_instance" "promethus_server" {
-  count = var.promethus_server_count
+resource "aws_instance" "prometheus_server" {
+  count = var.prometheus_server_count
   ami = data.aws_ami.ubuntu-18.id
   instance_type = var.instance_type
   key_name      = var.key_name

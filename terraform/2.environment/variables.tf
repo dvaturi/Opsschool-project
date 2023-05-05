@@ -63,8 +63,13 @@ variable "jenkins_slave_instances_count" {
   default     = 2
 }
 
-variable "promethus_server_count" {
-  description = "The number of promethus and grafana server instances to create"
+variable "prometheus_server_count" {
+  description = "The number of prometheus and grafana server instances to create"
+  default = 1
+}
+
+variable "elasticsearch_server_count" {
+  description = "The number of elasticsearch server instances to create"
   default = 1
 }
 
