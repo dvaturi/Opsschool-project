@@ -4,3 +4,4 @@
     name: consul.service
     state: restarted
   listen: "restart consul service" 
+

@@ -1,0 +1,44 @@
+{
+  "service": {
+    "id": "Prometheus&Grafana",
+    "name": "Prometheus&Grafana",
+    "tags": ["prometheus", "grafana"],
+    "port": 9090,
+    "checks": [
+      {
+        "id": "tcp",
+        "name": "TCP on port 9090",
+        "tcp": "172.17.0.1:9090",
+        "interval": "10s",
+        "timeout": "1s"
+      },
+      {
+        "id": "tcp",
+        "name": "TCP on port 3000",
+        "tcp": "172.17.0.1:3000",
+        "interval": "10s",
+        "timeout": "1s"
+      },
+      {
+        "id": "http",
+        "name": "HTTP on port 9090",
+        "http": "http://localhost:9090/",
+        "interval": "30s",
+        "timeout": "1s"
+      },
+      {
+        "id": "http",
+        "name": "HTTP on port 3000",
+        "http": "http://localhost:3000/",
+        "interval": "30s",
+        "timeout": "1s"
+      },
+      {
+        "id": "service",
+        "name": "docker.service",
+        "args": ["systemctl", "status", "docker.service"],
+        "interval": "60s"
+      }
+    ]
+  }
+}

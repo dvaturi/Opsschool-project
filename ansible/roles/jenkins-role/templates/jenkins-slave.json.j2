@@ -1,0 +1,16 @@
+{
+  "service": {
+    "id": "jenkins-slave",
+    "name": "jenkins-slave",
+    "tags": ["jenkins", "slave"],
+    "port": 80,
+    "checks": [
+      {
+        "id": "service",
+        "name": "docker service",
+        "args": ["systemctl", "status", "docker.service"],
+        "interval": "60s"
+      }
+    ]
+  }
+}

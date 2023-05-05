@@ -46,3 +46,13 @@
 - name: installing kubectl 2/2
   become: true
   shell: sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+- name: copy consul-jenkins-slave template
+  template:
+    dest: /etc/consul.d/jenkins-slave.json
+    src: jenkins-slave.json.j2
+    force: yes
+    owner: consul
+    group: consul
+    mode: '0755'
+  notify: "restart consul service"

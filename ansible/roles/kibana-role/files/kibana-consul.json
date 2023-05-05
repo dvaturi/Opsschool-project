@@ -1,0 +1,29 @@
+  {
+    "service": {
+      "name": "kibana",
+      "port": 5601,
+      "tags": ["kibana", "elasticsearch"],
+      "checks": [
+        {
+          "id": "tcp",
+          "name": "TCP on port 5601",
+          "tcp": "localhost:5601",
+          "interval": "10s",
+          "timeout": "1s"
+        },
+        {
+          "id": "http",
+          "name": "HTTP on port 5601",
+          "http": "http://localhost:5601/",
+          "interval": "30s",
+          "timeout": "1s"
+        },
+        {
+          "id": "service",
+          "name": "kibana service test",
+          "args": ["systemctl", "status", "kibana.service"],
+          "interval": "60s"
+        }
+      ]
+    }
+  }

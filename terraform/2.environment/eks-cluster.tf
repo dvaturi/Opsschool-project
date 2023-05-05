@@ -77,7 +77,7 @@ resource "aws_security_group_rule" "prometheus_tcp" {
   from_port         = 9100
   to_port           = 9100
   protocol          = "tcp"
-  security_group_id = module.security-group.all_worker_mgmt_sg.id
+  security_group_id = aws_security_group.all_worker_mgmt_sg.id
   type              = "ingress"
   cidr_blocks = var.internet_cidr
 }
@@ -87,7 +87,7 @@ resource "aws_security_group_rule" "prometheus_http" {
   from_port         = 8500
   to_port           = 8500
   protocol          = "tcp"
-  security_group_id = module.security-group.all_worker_mgmt_sg.id
+  security_group_id = aws_security_group.all_worker_mgmt_sg.id
   type              = "ingress"
   cidr_blocks = var.internet_cidr
 }
@@ -97,7 +97,7 @@ resource "aws_security_group_rule" "lan_tcp" {
   from_port         = 8301
   to_port           = 8301
   protocol          = "tcp"
-  security_group_id = module.security-group.all_worker_mgmt_sg.id
+  security_group_id = aws_security_group.all_worker_mgmt_sg.id
   type              = "ingress"
   cidr_blocks = var.internet_cidr
 }
@@ -107,7 +107,7 @@ resource "aws_security_group_rule" "wan_tcp" {
   from_port         = 8302
   to_port           = 8302
   protocol          = "tcp"
-  security_group_id = module.security-group.all_worker_mgmt_sg.id
+  security_group_id = aws_security_group.all_worker_mgmt_sg.id
   type              = "ingress"
   cidr_blocks = var.internet_cidr
 }
@@ -117,7 +117,7 @@ resource "aws_security_group_rule" "lan_udp" {
   from_port         = 8301
   to_port           = 8301
   protocol          = "udp"
-  security_group_id = module.security-group.all_worker_mgmt_sg.id
+  security_group_id = aws_security_group.all_worker_mgmt_sg.id
   type              = "ingress"
   cidr_blocks = var.internet_cidr
 }
@@ -127,27 +127,27 @@ resource "aws_security_group_rule" "wan_udp" {
   from_port         = 8302
   to_port           = 8302
   protocol          = "udp"
-  security_group_id = module.security-group.all_worker_mgmt_sg.id
+  security_group_id = aws_security_group.all_worker_mgmt_sg.id
   type              = "ingress"
   cidr_blocks = var.internet_cidr
 }
 
-resource "aws_security_group_rule" "consul_dns_tcp" {
+resource "aws_security_group_rule" "consul_dns_tcp1" {
   description       = "Allow Consul DNS TCP access"
   from_port         = 8600
   to_port           = 8600
   protocol          = "tcp"
-  security_group_id = module.security-group.all_worker_mgmt_sg.id
+  security_group_id = aws_security_group.all_worker_mgmt_sg.id
   type              = "ingress"
   cidr_blocks = var.internet_cidr
 }
 
-resource "aws_security_group_rule" "consul_dns_udp" {
+resource "aws_security_group_rule" "consul_dns_udp1" {
   description       = "Allow Consul DNS UDP access"
   from_port         = 8600
   to_port           = 8600
   protocol          = "udp"
-  security_group_id = module.security-group.all_worker_mgmt_sg.id
+  security_group_id = aws_security_group.all_worker_mgmt_sg.id
   type              = "ingress"
   cidr_blocks = var.internet_cidr
 }

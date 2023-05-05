@@ -6,6 +6,28 @@
   become_method: sudo
   roles:
     - consul
+    - node-exporter
+    - filebeat
+
+- name: kandula_prometheus_playbook
+  hosts: tag_prometheus_server_true:&tag_kandula_app_true
+  remote_user: ubuntu
+  become: yes
+  become_user: root
+  become_method: sudo
+  roles:
+    - docker-role
+    - prometheus
+
+- name: kandula_elk_playbook
+  hosts: tag_elasticsearch_kibana_true
+  remote_user: ubuntu
+  become: yes
+  become_user: root
+  become_method: sudo
+  roles:
+    - elasticsearch-role
+    - kibana-role
 
 - name: kandula_jenkins_playbook
   hosts: tag_jenkins_true
@@ -15,5 +37,6 @@
   become_method: sudo
   roles:
     - jenkins-role
+
 
 

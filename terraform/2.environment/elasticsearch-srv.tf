@@ -2,9 +2,9 @@
 resource "aws_instance" "elasticsearch_server" {
   count = var.elasticsearch_server_count
   ami = data.aws_ami.ubuntu-18.id
-  instance_type = var.instance_type
+  instance_type = var.instance_type2
   key_name      = var.key_name
-  vpc_security_group_ids = [aws_security_group.kandula_elk.id, aws_security_group.consul_sg.id]
+  vpc_security_group_ids = [aws_security_group.elk_sg.id, aws_security_group.consul_sg.id]
   iam_instance_profile   = aws_iam_instance_profile.consul-join.name
   subnet_id = element(module.vpc_module.private_subnets_id, count.index)
   user_data = "elasticsearch_kibana"
@@ -76,7 +76,7 @@ resource "aws_security_group_rule" "kibana_access" {
   cidr_blocks = var.internet_cidr
 }
 
-resource "aws_security_group_rule" "logstash_access" {
+resource "aws_security_group_rule" "elk_logstash_access" {
   description       = "allow access to logstash from"
   from_port         = 5044
   protocol          = "tcp"
@@ -87,7 +87,7 @@ resource "aws_security_group_rule" "logstash_access" {
   cidr_blocks = var.internet_cidr
 }
 
-resource "aws_security_group_rule" "_https_access" {
+resource "aws_security_group_rule" "elk_https_access" {
   description       = "allow HTTPS access to "
   from_port         = 443
   protocol          = "tcp"

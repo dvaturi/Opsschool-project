@@ -30,6 +30,12 @@ variable "instance_type" {
   default     = "t2.micro"
 }
 
+variable "instance_type2" {
+  description = "The type of the EC2, for example - t2.medium"
+  type        = string
+  default     = "t2.small"
+}
+
 variable "key_name" {
   default     = "opsschoolproject"
   description = "The key name of the Key Pair to use for the instance"

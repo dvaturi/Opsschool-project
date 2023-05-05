@@ -1,0 +1,15 @@
+---
+# tasks file for filebeat
+- name: Download filebeat
+  apt: 
+    deb: https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-oss-7.11.0-amd64.deb
+
+- name: Copy filebeat conf file
+  ansible.builtin.copy:
+    src: filebeat.yml
+    dest: /etc/filebeat/filebeat.yml
+    force: yes
+    owner: root
+    group: root
+    mode: '0644'
+  notify: "restart filebeat service"
