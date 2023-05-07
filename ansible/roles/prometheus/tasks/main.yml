@@ -10,11 +10,11 @@
     cmd: "docker-compose up -d"
     chdir: /home/ubuntu/compose
 
-- name: copy prometheus template
-  template:
-    dest: /home/ubuntu/compose/prometheus/prometheus.yml
-    src: prometheus.yml.j2
-    mode: '0755'
+# - name: copy prometheus template
+#   template:
+#     dest: /home/ubuntu/compose/prometheus/prometheus.yml
+#     src: prometheus.yml.j2
+#     mode: '0755'
 
 - name: copy consul-prometheus-grafana template
   template:

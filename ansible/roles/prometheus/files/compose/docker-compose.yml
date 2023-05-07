@@ -18,15 +18,19 @@ services:
       --config.file=/etc/prometheus/prometheus.yml
       --storage.tsdb.path=/prometheus
       --storage.tsdb.retention=30d
-#      --web.enable-admin-api
     restart: unless-stopped
     logging: *default-logging
+    
   grafana:
     image: grafana/grafana:${GRAFANA_TAG}
     ports:
       - 3000:3000
+    environment:
+      - GF_PATHS_PROVISIONING=/etc/grafana/provisioning
     volumes:
       - ./grafana/grafana.ini:/etc/grafana/grafana.ini
+      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+      - ./grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
       - grafana_data:/var/lib/grafana
     restart: unless-stopped
     logging: *default-logging

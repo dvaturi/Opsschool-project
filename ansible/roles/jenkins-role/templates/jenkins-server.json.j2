@@ -3,20 +3,13 @@
     "id": "jenkins-server",
     "name": "jenkins-server",
     "tags": ["jenkins", "master"],
-    "port": 80,
+    "port": 8080,
     "checks": [
       {
         "id": "tcp",
         "name": "TCP on port 8080",
-        "tcp": "localhost:8080",
+        "tcp": "172.17.0.1:8080",
         "interval": "10s",
-        "timeout": "1s"
-      },
-      {
-        "id": "http",
-        "name": "HTTP on port 8080",
-        "http": "http://localhost:8080/",
-        "interval": "30s",
         "timeout": "1s"
       },
       {
