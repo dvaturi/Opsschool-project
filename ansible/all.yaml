@@ -16,7 +16,7 @@
   become_user: root
   become_method: sudo
   roles:
-    - docker-role
+    - docker
     - prometheus
 
 - name: kandula_elk_playbook
@@ -26,8 +26,7 @@
   become_user: root
   become_method: sudo
   roles:
-    - elasticsearch-role
-    - kibana-role
+    - elk
 
 - name: kandula_jenkins_playbook
   hosts: tag_jenkins_true
@@ -36,7 +35,7 @@
   become_user: root
   become_method: sudo
   roles:
-    - jenkins-role
+    - jenkins
 
 
 

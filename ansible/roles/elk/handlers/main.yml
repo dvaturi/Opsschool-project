@@ -1,5 +1,4 @@
 ---
-# handlers file for elasticsearch
 - name: restart consul
   ansible.builtin.service:
     name: consul.service

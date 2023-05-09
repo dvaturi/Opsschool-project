@@ -49,10 +49,36 @@
     name: elasticsearch
     state: started
 
-# add consul service file
-- name: copy elastic consul service
-  copy:
-    dest: /etc/consul.d/elastic_service.json
-    src: elastic_service.json
+# Install Kibana 
+- name: Install a kibana.
+  apt:
+    deb: https://artifacts.elastic.co/downloads/kibana/kibana-oss-7.10.2-amd64.deb
+ 
+# Configurations
+- name: Updating the config file to allow outside access
+  lineinfile:
+    destfile: /etc/kibana/kibana.yml
+    regexp: 'server.host:'
+    line: 'server.host: "0.0.0.0" '
+
+- name: Defining server port
+  lineinfile:
+    destfile: /etc/kibana/kibana.yml
+    regexp: 'server.port:'
+    line: 'server.port: "5601"'
+   
+# Starting Kibana
+- name: Starting Kibana
+  service:
+    name: kibana
+    state: started
+    
+- name: copy consul-elk template
+  template:
+    dest: /etc/consul.d/elk.json
+    src: elk.json.j2
+    force: yes
+    owner: consul
+    group: consul
     mode: '0755'
-  notify: restart consul service
+  notify: "restart consul service"
