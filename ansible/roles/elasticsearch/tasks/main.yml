@@ -1,53 +1,45 @@
 ---
-# tasks file for elasticsearch
-# Add Elasticsearch apt key
+- name: installing elasticsearch gpg key
+  become: true
+  shell: wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add 
 
-- name: Add Elasticsearch apt key
-  apt_key:
-    url: "https://packages.elastic.co/GPG-KEY-elasticsearch"
-    state: present
+- name: Installing Elasticsearch repository
+  become: true
+  shell: sudo apt-add-repository "deb https://artifacts.elastic.co/packages/8.x/apt stable main"
 
-# Add the Elasticsearch apt repo. For versions 6 of the stack - use '6.x-prerelease':
+- name: installing elasticsearch
+  become: true
+  shell: sudo apt-get update -yqq
 
-- name: Adding Elasticsearch repo
-  apt_repository:
-    repo: deb https://artifacts.elastic.co/packages/7.x/apt stable main
-    state: present
+- name: installing elasticsearch
+  become: true
+  shell: sudo apt-get install -yqq elasticsearch
 
-# Installing Elasticsearch
+- name: Copy jvm.options conf file
+  ansible.builtin.copy:
+    src: jvm.options
+    dest: /etc/elasticsearch/jvm.options
+    force: yes
+    owner: root
+    group: root
+    mode: '0644'
 
-- name: Install Elasticsearch
-  apt:
-    deb : https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-oss-7.10.2-amd64.deb
-    update_cache: yes
-   
-   
-# Update Elasticsearch config file to allow access (to secure Elasticsearch, bind to 'localhost'). 
-- name: Updating the config file to allow outside access
-  lineinfile:
-    destfile: /etc/elasticsearch/elasticsearch.yml
-    regexp: 'network.host:'
-    line: 'network.host: "0.0.0.0"'
- 
-# Update Elasticsearch port in config file 
-- name: Updating the port in config file 
-  lineinfile:
-    destfile: /etc/elasticsearch/elasticsearch.yml
-    regexp: 'http.port:'
-    line: 'http.port: "9200"'
+- name: Copy elasticsearch.yml conf file
+  ansible.builtin.copy:
+    src: elasticsearch.yml
+    dest: /etc/elasticsearch/elasticsearch.yml
+    force: yes
+    owner: root
+    group: root
+    mode: '0644'
 
-- name: Updating the port in config file 
-  lineinfile:
-    destfile: /etc/elasticsearch/elasticsearch.yml
-    regexp: 'discovery.type:'
-    line: 'discovery.type: single-node'
+- name: enable elasticsearch service
+  become: true
+  shell: sudo systemctl enable elasticsearch
 
-
-# Start Elasticsearch
-- name: Starting Elasticsearch
-  service:
-    name: elasticsearch
-    state: started
+- name: start elasticsearch service
+  become: true
+  shell: sudo systemctl start elasticsearch
     
 - name: copy consul-elasticsearch template
   template:

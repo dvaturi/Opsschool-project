@@ -1,30 +1,11 @@
 filebeat.inputs:
-  - type: log
-    enabled: true
-    paths:
-      - /var/log/auth.log
-filebeat.modules:
-  - module: system
-    syslog:
-      enabled: false
-    auth:
-      enabled: true
-filebeat.config.modules:
-  path: ${path.config}/modules.d/*.yml
-  reload.enabled: true
-
-setup.template.name: "filebeat"
-setup.template.pattern: "filebeat-*"
-setup.template.settings:
-  index.number_of_shards: 1
-processors:
-  - add_host_metadata:
-      when.not.contains.tags: forwarded
-  - add_cloud_metadata: ~
-#output.elasticsearch:
-# need to change to connet with counsul
-  # hosts: [ "elasticsearch.service.opsschool.consul:9200" ]
-  # index: "filebeat-%{[agent.version]}-%{+yyyy.MM.dd}"
-## OR
+- type: log
+  enabled: true
+  paths:
+    - /var/log/syslog
 output.logstash:
-  hosts: [ "logstash.service.opsschool.consul:5044" ]
+  enabled: true
+  ssl.enabled: false
+  hosts: ["logstash.service.opsschool.consul:5044"]
+  filebeat.config.modules.path: /etc/filebeat/modules.d/*.yml
+  reload.enabled: false

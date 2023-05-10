@@ -1,28 +1,37 @@
 ---
-# Install Kibana 
-- name: Install a kibana.
-  apt:
-    deb: https://artifacts.elastic.co/downloads/kibana/kibana-oss-7.10.2-amd64.deb
- 
-# Configurations
-- name: Updating the config file to allow outside access
-  lineinfile:
-    destfile: /etc/kibana/kibana.yml
-    regexp: 'server.host:'
-    line: 'server.host: "0.0.0.0"'
+- name: installing elasticsearch gpg key
+  become: true
+  shell: wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add 
 
-- name: Defining server port
-  lineinfile:
-    destfile: /etc/kibana/kibana.yml
-    regexp: 'server.port:'
-    line: 'server.port: "5601"'
-   
-# Starting Kibana
-- name: Starting Kibana
-  service:
-    name: kibana
-    state: started
-    
+- name: Installing Elasticsearch repository
+  become: true
+  shell: sudo apt-add-repository "deb https://artifacts.elastic.co/packages/8.x/apt stable main"
+
+- name: installing updates
+  become: true
+  shell: sudo apt-get update -yqq
+
+- name: installing kibana and apt-transport-https
+  become: true
+  shell: sudo apt-get install -yqq kibana apt-transport-https
+
+- name: Copy kibana.yml conf file
+  ansible.builtin.copy:
+    src: kibana.yml
+    dest: /etc/kibana/kibana.yml
+    force: yes
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: enable kibana service
+  become: true
+  shell: sudo systemctl enable kibana
+
+- name: start kibana service
+  become: true
+  shell: sudo systemctl start kibana
+
 - name: copy consul-kibana template
   template:
     dest: /etc/consul.d/kibana.json

@@ -1,10 +1,19 @@
 ---
+- name: installing elasticsearch gpg key
+  become: true
+  shell: wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add 
 
+- name: Installing Elasticsearch repository
+  become: true
+  shell: sudo apt-add-repository "deb https://artifacts.elastic.co/packages/8.x/apt stable main"
 
-# tasks file for filebeat
-- name: Download filebeat
-  apt: 
-    deb: https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-oss-7.11.0-amd64.deb
+- name: installing updates
+  become: true
+  shell: sudo apt-get update -yqq
+
+- name: installing filebeat
+  become: true
+  shell: sudo apt-get install -yqq filebeat
 
 - name: Copy filebeat conf file
   ansible.builtin.copy:

@@ -6,6 +6,13 @@
     "port": 5044,
     "checks": [
       {
+        "id": "tcp",
+        "name": "TCP on port 5044",
+        "tcp": "localhost:5044",
+        "interval": "10s",
+        "timeout": "1s"
+      },
+      {
         "id": "service",
         "name": "logstash service test",
         "args": ["systemctl", "status", "logstash.service"],

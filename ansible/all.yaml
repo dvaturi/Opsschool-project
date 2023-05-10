@@ -27,8 +27,8 @@
   become_method: sudo
   roles:
     - elasticsearch
-    - logstash
     - kibana
+    - logstash
 
 - name: kandula_jenkins_playbook
   hosts: tag_jenkins_true

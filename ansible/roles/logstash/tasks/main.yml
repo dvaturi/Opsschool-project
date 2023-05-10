@@ -1,24 +1,33 @@
 ---
-# Installing logstash
-- name: installing JRE
+- name: installing elasticsearch gpg key
   become: true
-  shell: sudo apt-get install default-jre -y
+  shell: wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add 
 
-- name: installing logstash 
+- name: Installing Elasticsearch repository
   become: true
-  shell: sudo apt-get update && sudo apt-get install logstash -y
+  shell: sudo apt-add-repository "deb https://artifacts.elastic.co/packages/8.x/apt stable main"
+
+- name: installing updates
+  become: true
+  shell: sudo apt-get update -yqq
+
+- name: installing logstash
+  become: true
+  shell: sudo apt-get install -yqq logstash
 
 - name: copy logstash config file
   copy:
-    dest: /etc/logstash/conf.d/filebeat-logstash.conf
-    src: filebeat-logstash.conf
+    dest: /etc/logstash/conf.d/logstash.conf
+    src: logstash.conf
     mode: '0755'
 
-# Starting logstash
-- name: Starting logstash
-  service:
-    name: logstash
-    state: started
+- name: enable logstash service
+  become: true
+  shell: sudo systemctl enable logstash
+
+- name: start logstash service
+  become: true
+  shell: sudo systemctl start logstash
     
 - name: copy consul-logstash template
   template:
