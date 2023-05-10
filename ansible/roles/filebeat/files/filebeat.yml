@@ -21,10 +21,10 @@ processors:
   - add_host_metadata:
       when.not.contains.tags: forwarded
   - add_cloud_metadata: ~
-output.elasticsearch:
+#output.elasticsearch:
 # need to change to connet with counsul
-  hosts: [ "Elasticsearch.service.opsschool.consul:9200" ]
-  index: "filebeat-%{[agent.version]}-%{+yyyy.MM.dd}"
+  # hosts: [ "elasticsearch.service.opsschool.consul:9200" ]
+  # index: "filebeat-%{[agent.version]}-%{+yyyy.MM.dd}"
 ## OR
-#output.logstash:
-#  hosts: [ "127.0.0.1:5044" ]
+output.logstash:
+  hosts: [ "logstash.service.opsschool.consul:5044" ]

@@ -33,7 +33,7 @@ variable "instance_type" {
 variable "instance_type2" {
   description = "The type of the EC2, for example - t2.medium"
   type        = string
-  default     = "t2.small"
+  default     = "m4.large"
 }
 
 variable "key_name" {

@@ -1,0 +1,31 @@
+---
+# Installing logstash
+- name: installing JRE
+  become: true
+  shell: sudo apt-get install default-jre -y
+
+- name: installing logstash 
+  become: true
+  shell: sudo apt-get update && sudo apt-get install logstash -y
+
+- name: copy logstash config file
+  copy:
+    dest: /etc/logstash/conf.d/filebeat-logstash.conf
+    src: filebeat-logstash.conf
+    mode: '0755'
+
+# Starting logstash
+- name: Starting logstash
+  service:
+    name: logstash
+    state: started
+    
+- name: copy consul-logstash template
+  template:
+    dest: /etc/consul.d/logstash.json
+    src: logstash.json.j2
+    force: yes
+    owner: consul
+    group: consul
+    mode: '0755'
+  notify: "restart consul service"

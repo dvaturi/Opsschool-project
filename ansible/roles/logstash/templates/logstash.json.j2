@@ -1,0 +1,16 @@
+{
+  "service": {
+    "id": "logstash",
+    "name": "logstash",
+    "tags": ["logstash"],
+    "port": 5044,
+    "checks": [
+      {
+        "id": "service",
+        "name": "logstash service test",
+        "args": ["systemctl", "status", "logstash.service"],
+        "interval": "60s"
+      }
+    ]
+  }
+}

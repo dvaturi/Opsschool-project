@@ -1,0 +1,30 @@
+{
+  "service": {
+    "id": "elasticsearch",
+    "name": "elasticsearch",
+    "tags": ["elasticsearch"],
+    "port": 9200,
+    "checks": [
+      {
+        "id": "tcp",
+        "name": "TCP on port 9200",
+        "tcp": "localhost:9200",
+        "interval": "10s",
+        "timeout": "1s"
+      },
+      {
+        "id": "http",
+        "name": "HTTP on port 9200",
+        "http": "http://localhost:9200/",
+        "interval": "30s",
+        "timeout": "1s"
+      },
+      {
+        "id": "service",
+        "name": "ElasticSearch service test",
+        "args": ["systemctl", "status", "elasticsearch.service"],
+        "interval": "60s"
+      }
+    ]
+  }
+}

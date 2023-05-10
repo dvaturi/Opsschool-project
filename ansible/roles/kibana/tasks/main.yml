@@ -1,0 +1,34 @@
+---
+# Install Kibana 
+- name: Install a kibana.
+  apt:
+    deb: https://artifacts.elastic.co/downloads/kibana/kibana-oss-7.10.2-amd64.deb
+ 
+# Configurations
+- name: Updating the config file to allow outside access
+  lineinfile:
+    destfile: /etc/kibana/kibana.yml
+    regexp: 'server.host:'
+    line: 'server.host: "0.0.0.0"'
+
+- name: Defining server port
+  lineinfile:
+    destfile: /etc/kibana/kibana.yml
+    regexp: 'server.port:'
+    line: 'server.port: "5601"'
+   
+# Starting Kibana
+- name: Starting Kibana
+  service:
+    name: kibana
+    state: started
+    
+- name: copy consul-kibana template
+  template:
+    dest: /etc/consul.d/kibana.json
+    src: kibana.json.j2
+    force: yes
+    owner: consul
+    group: consul
+    mode: '0755'
+  notify: "restart consul service"
