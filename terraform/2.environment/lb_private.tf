@@ -90,7 +90,7 @@ resource "aws_lb_target_group" "prometheus_server" {
     port     = 9090
     protocol = "HTTP"
     path     = "/-/healthy"
-}
+  }
 }
 
 resource "aws_lb_target_group_attachment" "prometheus_server" {
@@ -124,7 +124,7 @@ resource "aws_lb_target_group" "grafana_server" {
     port     = 3000
     protocol = "HTTP"
     path     = "/-/healthy"
-}
+  }
 }
 
 resource "aws_lb_target_group_attachment" "grafana_server" {

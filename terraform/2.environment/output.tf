@@ -39,3 +39,16 @@ output "cluster_name" {
 output "oidc_provider_arn" {
   value = module.eks.oidc_provider_arn
 }
+
+output "route53_records" {
+  value = {
+    consul     = aws_route53_record.consul.name
+    jenkins    = aws_route53_record.jenkins.name
+    prometheus = aws_route53_record.prometheus.name
+    grafana    = aws_route53_record.grafana.name
+    kibana     = aws_route53_record.kibana.name
+  }
+}
+
+
+

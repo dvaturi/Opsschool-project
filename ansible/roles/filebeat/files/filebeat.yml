@@ -3,6 +3,11 @@ filebeat.inputs:
   enabled: true
   paths:
     - /var/log/syslog
+    - /var/log/auth.log
+    - /var/log/jenkins/jenkins.log
+    - /var/log/grafana/grafana.log
+    - /var/log/prometheus.log
+    - /var/log/consul/consul.log
 output.logstash:
   enabled: true
   ssl.enabled: false
