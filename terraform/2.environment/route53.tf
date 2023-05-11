@@ -7,7 +7,7 @@ resource "aws_route53_record" "consul" {
   name    = "consul.${aws_route53_zone.opsschool_project.name}"   
   type    = "CNAME"
   ttl     = "300"
-  records = ["${aws_lb.private_services.dns_name}:8500"]  
+  records = ["${aws_lb.private_services.dns_name}:${aws_lb_target_group.consul_server.port}"]  
 }
 
 resource "aws_route53_record" "jenkins" {
@@ -15,7 +15,7 @@ resource "aws_route53_record" "jenkins" {
   name    = "jenkins.${aws_route53_zone.opsschool_project.name}"
   type    = "CNAME"
   ttl     = "300"
-  records = ["${aws_lb.private_services.dns_name}:8080"]
+  records = ["${aws_lb.private_services.dns_name}:${aws_lb_target_group.jenkins_server.port}"]
 }
 
 resource "aws_route53_record" "prometheus" {
@@ -23,7 +23,7 @@ resource "aws_route53_record" "prometheus" {
   name    = "prometheus.${aws_route53_zone.opsschool_project.name}"
   type    = "CNAME"
   ttl     = "300"
-  records = ["${aws_lb.private_services.dns_name}:9090"]
+  records = ["${aws_lb.private_services.dns_name}:${aws_lb_target_group.prometheus_server.port}"]
 }
 
 resource "aws_route53_record" "grafana" {
@@ -31,7 +31,7 @@ resource "aws_route53_record" "grafana" {
   name    = "grafana.${aws_route53_zone.opsschool_project.name}"
   type    = "CNAME"
   ttl     = "300"
-  records = ["${aws_lb.private_services.dns_name}:3000"]
+  records = ["${aws_lb.private_services.dns_name}:${aws_lb_target_group.grafana_server.port}"]
 }
 
 resource "aws_route53_record" "kibana" {
@@ -39,5 +39,5 @@ resource "aws_route53_record" "kibana" {
   name    = "kibana.${aws_route53_zone.opsschool_project.name}"
   type    = "CNAME"
   ttl     = "300"
-  records = ["${aws_lb.private_services.dns_name}:5601"]
+  records = ["${aws_lb.private_services.dns_name}:${aws_lb_target_group.kibana_server.port}"]
 }
