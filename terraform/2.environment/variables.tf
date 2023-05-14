@@ -24,6 +24,16 @@ variable "destination_ansible_folder_path" {
   type    = string
 }
 
+variable "source_vpn_script_path" {
+  default = "/home/ec2-user/environment/.c9/opsschool9-dev-env/repositories/Opsschool-project/terraform/2.environment/scripts/openvpnsrv.sh"
+  type    = string
+}
+
+variable "destination_vpn_script_path" {
+  default = "/home/ubuntu/openvpnsrv.sh"
+  type    = string
+}
+
 variable "instance_type" {
   description = "The type of the EC2, for example - t2.medium"
   type        = string
@@ -77,6 +87,11 @@ variable "prometheus_server_count" {
 variable "elasticsearch_server_count" {
   description = "The number of elasticsearch server instances to create"
   default = 1
+}
+
+variable "vpn_instances_count" {
+  description = "The number of vpn instances to create"
+  default     = 1
 }
 
 variable "internet_cidr" {

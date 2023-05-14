@@ -24,6 +24,15 @@ data "aws_ami" "amazon-linux-2" {
   }
 }
 
+data "http" "get_external_ip" {
+  url = "https://api.ipify.org?format=text"
+}
+
+data "external" "parse_external_ip" {
+  program = ["sh", "-c", "echo '{ \"ip\": \"'${data.http.get_external_ip.body}'\" }'"]
+}
+
+
 # Retrieve bastion instance private IPs
 data "aws_instance" "bastion_private_ips" {
   count = var.bastion_instances_count

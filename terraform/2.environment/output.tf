@@ -10,6 +10,13 @@ output "bastion_public_ips" {
   ])
 }
 
+# vpn server
+output "vpn_public_ips" {
+  value = flatten([
+    for instance in aws_instance.vpn : "ssh -i ~/.ssh/opsschoolproject.pem ubuntu@${instance.public_ip}"
+  ])
+}
+
 #EKS
 output "cluster_id" {
   description = "EKS cluster ID."
