@@ -32,6 +32,15 @@ cd terraform/2.environment/
 terraform init
 terraform apply --auto-approve
 ```
+## Connect to vpn
+Go directly into the s3 bucket that has been created with the arn: "arn:aws:s3:::opsschool-vpn-client" and download the openvpn client file called "ospschool.ovpn"
+
+Download and install [Openvpn connect](https://openvpn.net/client/) client on your computer
+
+use the openvpn official client in order to connect to the openvpn server that has been created as part of the process.
+
+click on the icon of the "openvpn connect" app and then import profile.
+wait for the client to connect to the server and then move on to the next section
 
 ## Connect to one of the bastions
 (Temp, will be automated) connect to one of the bastions with ssh (command will be prompted at the end of the terraform apply):
