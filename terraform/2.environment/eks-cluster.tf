@@ -15,6 +15,7 @@ module "eks" {
     Purpose = var.purpose_tag
     # consul_server = "false"
     # kandula_app = "true"
+    eks_app = "true"
     GithubRepo  = "terraform-aws-eks"
     GithubOrg   = "terraform-aws-modules"
  }

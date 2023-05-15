@@ -43,7 +43,9 @@ resource "aws_instance" "bastion" {
       "sudo -H ansible-galaxy collection install community.general",
       "ansible-galaxy collection install amazon.aws",
       "sudo -H apt install -y python-pip",
-      "sudo -H pip install boto3 botocore"
+      "sudo -H pip install boto3 botocore",
+      "curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.23.17/bin/linux/amd64/kubectl",
+      "sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl"
     ]
     connection {
       type        = "ssh"
@@ -126,6 +128,13 @@ resource "aws_iam_policy_attachment" "bastion2" {
   name       = "bastion2"
   roles      = [aws_iam_role.bastion.name]
   policy_arn = aws_iam_policy.s3_manage.arn
+}
+
+# Create the policy
+resource "aws_iam_policy" "bastion3" {
+  name        = "bastion3"
+  description = "Allows bastion to run aws commands and manage eks."
+  policy      = file("${path.module}/templates/policies/ec2-eks-manage.json")
 }
 
 # Create the instance profile

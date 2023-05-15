@@ -1,0 +1,12 @@
+- name: kandula_eks_playbook
+  hosts: tag_eks_app_true
+  remote_user: ec2-user
+  become: yes
+  become_user: root
+  become_method: sudo
+  roles:
+    - eks
+
+
+
+

@@ -77,6 +77,10 @@ mapRoles: |
       - system:masters
       rolearn: arn:aws:iam::<need to change>:role/Jenkins
       username: Jenkins
+ - groups:
+      - system:masters
+      rolearn: arn:aws:iam::<need to change>:role/bastion
+      username: bastion
 ...
 ```
 - Run the following command to update the Kubernetes config map **kubectl apply -f aws-auth.yaml**
