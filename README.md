@@ -91,6 +91,7 @@ mapRoles: |
 
 ## Destroy env
 - Run destroy_app Jenkins job to destroy the app inside of the EKS cluster.
+- go to the s3 service in the AWS UI, and look for the following s3 bucket: "opsschool-vpn-client" Get in and delete opsschool.ovpn file.
 - cd Opsschool-project/terraform/2.environment and "terraform destroy -auto-approve"
 - go to the s3 service in the AWS UI, and look for the following s3 bucket: "opsschool-terraform-state-dean" Get in and delete all the state files **including the versioning**
 - cd Opsschool-project/terraform/1.s3_creation and "terraform destroy -auto-approve"
