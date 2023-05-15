@@ -42,7 +42,7 @@ resource "aws_instance" "vpn" {
     Owner = "Dean Vaturi"
     Purpose = var.purpose_tag
     consul_server = "false"
-    kandula_app = "true"
+    kandula_app = "false"
   }
 }
 
@@ -73,6 +73,16 @@ resource "aws_security_group_rule" "vpn_ssh_access" {
   cidr_blocks       = ["${data.external.parse_external_ip.result.ip}/32"]
 }
 
+resource "aws_security_group_rule" "vpn_access" {
+  description       = "allow vpn access from local machine"
+  from_port         = 1194
+  protocol          = "udp"
+  security_group_id = aws_security_group.vpn_sg.id
+  to_port           = 1194
+  type              = "ingress"
+  cidr_blocks       = var.internet_cidr
+}
+
 resource "aws_security_group_rule" "vpn_outbound_anywhere" {
   description       = "allow outbound traffic to anywhere"
   from_port         = 0
@@ -90,8 +100,8 @@ resource "aws_iam_role" "vpn" {
 }
 
 # Create the policy
-resource "aws_iam_policy" "vpn" {
-  name        = "vpn"
+resource "aws_iam_policy" "s3_manage" {
+  name        = "s3_manage"
   description = "Allows Consul nodes to describe instances for joining."
   policy      = file("${path.module}/templates/policies/s3-manage.json")
 }
@@ -100,7 +110,7 @@ resource "aws_iam_policy" "vpn" {
 resource "aws_iam_policy_attachment" "vpn" {
   name       = "vpn"
   roles      = [aws_iam_role.vpn.name]
-  policy_arn = aws_iam_policy.vpn.arn
+  policy_arn = aws_iam_policy.s3_manage.arn
 }
 
 # Create the instance profile

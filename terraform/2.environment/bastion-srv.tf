@@ -8,6 +8,7 @@ resource "aws_instance" "bastion" {
   subnet_id = element(module.vpc_module.public_subnets_id, count.index)
   vpc_security_group_ids = [aws_security_group.bastion_sg.id]
   iam_instance_profile   = aws_iam_instance_profile.bastion.name
+  depends_on = [aws_instance.vpn]
 
   provisioner "file" {
     source      = var.source_ansible_folder_path
@@ -42,8 +43,7 @@ resource "aws_instance" "bastion" {
       "sudo -H ansible-galaxy collection install community.general",
       "ansible-galaxy collection install amazon.aws",
       "sudo -H apt install -y python-pip",
-      "sudo -H pip install boto3 botocore",
-
+      "sudo -H pip install boto3 botocore"
     ]
     connection {
       type        = "ssh"
@@ -61,7 +61,7 @@ resource "aws_instance" "bastion" {
     Owner = "Dean Vaturi"
     Purpose = var.purpose_tag
     consul_server = "false"
-    kandula_app = "true"
+    kandula_app = "false"
   }
 }
 
@@ -85,7 +85,10 @@ resource "aws_security_group_rule" "bastion_ssh_access" {
   security_group_id = aws_security_group.bastion_sg.id
   to_port           = 22
   type              = "ingress"
-  cidr_blocks       = var.bastion_cidr_block_in
+  cidr_blocks       = concat(
+    [for ip in data.aws_instance.vpn_public_ips.*.public_ip : "${ip}/32"],
+    ["${data.external.parse_external_ip.result.ip}/32"]
+  )
 }
 
 resource "aws_security_group_rule" "bastion_outbound_anywhere" {
@@ -116,6 +119,13 @@ resource "aws_iam_policy_attachment" "bastion" {
   name       = "bastion"
   roles      = [aws_iam_role.bastion.name]
   policy_arn = aws_iam_policy.bastion.arn
+}
+
+# Attach the policy
+resource "aws_iam_policy_attachment" "bastion2" {
+  name       = "bastion2"
+  roles      = [aws_iam_role.bastion.name]
+  policy_arn = aws_iam_policy.s3_manage.arn
 }
 
 # Create the instance profile

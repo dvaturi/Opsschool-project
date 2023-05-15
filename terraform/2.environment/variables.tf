@@ -100,13 +100,6 @@ variable "internet_cidr" {
 }
 
 #need to change!!!!
-variable "bastion_cidr_block_in" {
-  type = list(string)
-  default = [ "0.0.0.0/0"]
-}
-
-
-#need to change!!!!
 variable "consul_cidr_block" {
   type = list(string)
   default =  [ "10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16" ]
