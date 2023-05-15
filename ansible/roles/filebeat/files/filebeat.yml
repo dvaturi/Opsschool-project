@@ -8,6 +8,7 @@ filebeat.inputs:
     - /var/log/grafana/grafana.log
     - /var/log/prometheus.log
     - /var/log/consul/consul.log
+    - /var/log/containers/*.log
 output.logstash:
   enabled: true
   ssl.enabled: false
