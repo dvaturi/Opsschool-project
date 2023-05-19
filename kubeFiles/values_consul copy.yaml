@@ -9,7 +9,6 @@ global:
   # setting `server.enabled` to true.
   enabled: false
 
-
   # Set the prefix used for all resources in the Helm chart. If not set,
   # the prefix will be `<helm release name>-consul`.
   # @type: string
@@ -27,13 +26,13 @@ global:
   # Examples:
   #
   # ```yaml
-  # # Consul 1.10.0
-  # image: "consul:1.10.0"
-  # # Consul Enterprise 1.10.0
-  # image: "hashicorp/consul-enterprise:1.10.0-ent"
+  # # Consul 1.5.0
+  # image: "consul:1.5.0"
+  # # Consul Enterprise 1.5.0
+  # image: "hashicorp/consul-enterprise:1.5.0-ent"
   # ```
   # @default: hashicorp/consul:<latest version>
-  image: "hashicorp/consul:1.8.5"
+  image: "hashicorp/consul:1.9.2"
 
   # Array of objects containing image pull secret names that will be applied to each service account.
   # This can be used to reference image pull secrets if using a custom consul or consul-k8s Docker image.
@@ -53,7 +52,7 @@ global:
   # Docker image that is used for functionality such the catalog sync.
   # This can be overridden per component.
   # @default: hashicorp/consul-k8s:<latest version>
-  imageK8S: "hashicorp/consul-k8s:0.26.0"
+  imageK8S: "hashicorp/consul-k8s:0.23.0"
 
   # The name of the datacenter that the agents should
   # register as. This can't be changed once the Consul cluster is up and running
@@ -91,7 +90,6 @@ global:
     # secretKey is the key within the Kubernetes secret that holds the gossip
     # encryption key.
     secretKey: "key"
-
 
   # Enables TLS (https://learn.hashicorp.com/tutorials/consul/tls-encryption-secure)
   # across the cluster to verify authenticity of the Consul servers and clients.
@@ -230,37 +228,12 @@ global:
     # `<helm-release-name>-consul-federation`. Requires consul-k8s 0.15.0+.
     createFederationSecret: false
 
-  # Configures metrics for Consul service mesh
-  metrics:
-    # Configures the Helm chart’s components
-    # to expose Prometheus metrics for the Consul service mesh. By default
-    # this includes gateway metrics and sidecar metrics.
-    # @type: boolean
-    enabled: false
-
-    # Configures consul agent metrics. Only applicable if
-    # `global.metrics.enabled` is true.
-    # @type: boolean
-    enableAgentMetrics: false
-
-    # Configures the retention time for metrics in Consul clients and
-    # servers. This must be greater than 0 for Consul clients and servers
-    # to expose any metrics at all.
-    # Only applicable if `global.metrics.enabled` is true.
-    # @type: string
-    agentMetricsRetentionTime: 1m
-
-    # If true, mesh, terminating, and ingress gateways will expose their
-    # Envoy metrics on port `20200` at the `/metrics` path and all gateway pods
-    # will have Prometheus scrape annotations. Only applicable if `global.metrics.enabled` is true.
-    # @type: boolean
-    enableGatewayMetrics: true
-
-  # For connect-injected pods, the consul sidecar is responsible for metrics merging. For ingress/mesh/terminating 
-  # gateways, it additionally ensures the Consul services are always registered with their local Consul client.
+  # The lifecycle sidecar ensures the Consul services
+  # are always registered with their local Consul clients and is used by the
+  # ingress/terminating/mesh gateways as well as with every Connect-injected service.
   # @recurse: false
   # @type: map
-  consulSidecarContainer:
+  lifecycleSidecarContainer:
     resources:
       requests:
         memory: "25Mi"
@@ -273,7 +246,7 @@ global:
   # connect-injected sidecar proxies and mesh, terminating, and ingress gateways.
   # See https://www.consul.io/docs/connect/proxies/envoy for full compatibility matrix between Consul and Envoy.
   # @default: envoyproxy/envoy-alpine:<latest supported version>
-  imageEnvoy: "envoyproxy/envoy-alpine:v1.18.3"
+  imageEnvoy: "envoyproxy/envoy-alpine:v1.16.0"
 
   # Configuration for running this Helm chart on the Red Hat OpenShift platform.
   # This Helm chart currently supports OpenShift v4.x+.
@@ -326,36 +299,6 @@ server:
     secretName: null
     # The key within the Kubernetes secret that holds the enterprise license.
     secretKey: null
-    # Manages license autoload. Required in Consul 1.10.0+, 1.9.7+ and 1.8.12+.
-    enableLicenseAutoload: true
-
-  # A Kubernetes secret containing a certificate & key for the server agents to use
-  # for TLS communication within the Consul cluster. Cert needs to be provided with
-  # additional DNS name SANs so that it will work within the Kubernetes cluster:
-  #
-  # ```bash
-  # consul tls cert create -server -days=730 -domain=consul -ca=consul-agent-ca.pem \
-  #     -key=consul-agent-ca-key.pem -dc={{datacenter}} \
-  #     -additional-dnsname="{{fullname}}-server" \
-  #     -additional-dnsname="*.{{fullname}}-server" \
-  #     -additional-dnsname="*.{{fullname}}-server.{{namespace}}" \
-  #     -additional-dnsname="*.{{fullname}}-server.{{namespace}}.svc" \
-  #     -additional-dnsname="*.server.{{datacenter}}.{{domain}}" \
-  #     -additional-dnsname="server.{{datacenter}}.{{domain}}"
-  # ```
-  #
-  # If you have generated the
-  # server-cert yourself with the consul CLI, you could use the following command
-  # to create the secret in Kubernetes:
-  #
-  # ```bash
-  # kubectl create secret generic consul-server-cert \
-  #     --from-file='tls.crt=./dc1-server-consul-0.pem'
-  #     --from-file='tls.key=./dc1-server-consul-0-key.pem'
-  # ```
-  serverCert:
-    # The name of the Kubernetes secret.
-    secretName: null
 
   # Exposes the servers' gossip and RPC ports as hostPorts. To enable a client
   # agent outside of the k8s cluster to join the datacenter, you would need to
@@ -371,7 +314,7 @@ server:
     # enable `server.exposeGossipAndRPCPorts` and `client.exposeGossipPorts`,
     # that will configure the LAN gossip ports on the servers and clients to be
     # hostPorts, so if you are running clients and servers on the same node the
-    # ports will conflict if they are both 8301. When you enable
+    # ports will conflict if they are both 8301.  When you enable
     # `server.exposeGossipAndRPCPorts` and `client.exposeGossipPorts`, you must
     # change this from the default to an unused port on the host, e.g. 9301. By
     # default the LAN gossip port is 8301 and configured as a containerPort on
@@ -401,19 +344,6 @@ server:
   # a new CA and set of certificates. Additional Connect settings can be configured
   # by setting the `server.extraConfig` value.
   connect: true
-
-  serviceAccount:
-    # This value defines additional annotations for the server service account. This should be formatted as a multi-line
-    # string.
-    #
-    # ```yaml
-    # annotations: |
-    #   "sample/annotation1": "foo"
-    #   "sample/annotation2": "bar"
-    # ```
-    #
-    # @type: string
-    annotations: null
 
   # The resource requests (CPU, memory, etc.)
   # for each of the server agents. This should be a YAML map corresponding to a Kubernetes
@@ -563,27 +493,6 @@ server:
   # (https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/) array in a Pod spec.
   tolerations: ""
 
-  # Pod topology spread constraints for server pods.
-  # This should be a multi-line YAML string matching the `topologySpreadConstraints` array
-  # (https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/) in a Pod Spec.
-  #
-  # This requires K8S >= 1.18 (beta) or 1.19 (stable).
-  #
-  # Example:
-  #
-  # ```yaml
-  # topologySpreadConstraints: |
-  #   - maxSkew: 1
-  #     topologyKey: topology.kubernetes.io/zone
-  #     whenUnsatisfiable: DoNotSchedule
-  #     labelSelector:
-  #       matchLabels:
-  #         app: {{ template "consul.name" . }}
-  #         release: "{{ .Release.Name }}"
-  #         component: server
-  # ```
-  topologySpreadConstraints: ""
-
   # This value defines `nodeSelector` (https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodeselector)
   # labels for server pod assignment, formatted as a multi-line string.
   #
@@ -721,6 +630,7 @@ client:
   # @type: array<string>
   join:
     - "provider=aws tag_key=consul_server tag_value=true"
+
   # An absolute path to a directory on the host machine to use as the Consul
   # client data directory. If set to the empty string or null, the Consul agent
   # will store its data in the Pod's local filesystem (which will
@@ -737,18 +647,11 @@ client:
   # required for Connect.
   grpc: true
 
-  # nodeMeta specifies an arbitrary metadata key/value pair to associate with the node
-  # (see https://www.consul.io/docs/agent/options.html#_node_meta)
-  nodeMeta:
-    pod-name: ${HOSTNAME}
-    host-ip: ${HOST_IP}
-
   # If true, the Helm chart will expose the clients' gossip ports as hostPorts.
   # This is only necessary if pod IPs in the k8s cluster are not directly routable
   # and the Consul servers are outside of the k8s cluster.
   # This also changes the clients' advertised IP to the `hostIP` rather than `podIP`.
   exposeGossipPorts: true
-
 
   # Resource settings for Client agents.
   # NOTE: The use of a YAML string is deprecated. Instead, set directly as a
@@ -955,19 +858,6 @@ client:
       # The key of the Kubernetes secret.
       secretKey: null
 
-    serviceAccount:
-      # This value defines additional annotations for the snapshot agent service account. This should be formatted as a
-      # multi-line string.
-      #
-      # ```yaml
-      # annotations: |
-      #   "sample/annotation1": "foo"
-      #   "sample/annotation2": "bar"
-      # ```
-      #
-      # @type: string
-      annotations: null
-
     # Resource settings for snapshot agent pods.
     # @recurse: false
     # @type: map
@@ -1048,19 +938,6 @@ ui:
     # @type: string
     type: null
 
-    # Optionally set the nodePort value of the ui service if using a NodePort service.
-    # If not set and using a NodePort service, Kubernetes will automatically assign
-    # a port.
-    nodePort:
-
-      # HTTP node port
-      # @type: integer
-      http: null
-
-      # HTTPS node port
-      # @type: integer
-      https: null
-
     # Annotations to apply to the UI service.
     #
     # Example:
@@ -1087,9 +964,6 @@ ui:
     # This will create an Ingress resource for the Consul UI.
     # @type: boolean
     enabled: false
-
-    # pathType override - see: https://kubernetes.io/docs/concepts/services-networking/ingress/#path-types
-    pathType: Prefix
 
     # hosts is a list of host name to create Ingress rules.
     #
@@ -1127,24 +1001,6 @@ ui:
     # @type: string
     annotations: null
 
-  # Configurations for displaying metrics in the UI.
-  metrics:
-    # Enable displaying metrics in the UI. The default value of "-"
-    # will inherit from `global.metrics.enabled` value.
-    # @type: boolean
-    # @default: global.metrics.enabled
-    enabled: "-"
-    # Provider for metrics. See
-    # https://www.consul.io/docs/agent/options#ui_config_metrics_provider
-    # This value is only used if `ui.enabled` is set to true.
-    # @type: string
-    provider: "prometheus"
-
-    # baseURL is the URL of the prometheus server, usually the service URL.
-    # This value is only used if `ui.enabled` is set to true.
-    # @type: string
-    baseURL: http://prometheus-server
-
 # Configure the catalog sync process to sync K8S with Consul
 # services. This can run bidirectional (default) or unidirectionally (Consul
 # to K8S or K8S to Consul only).
@@ -1156,7 +1012,7 @@ ui:
 syncCatalog:
   # True if you want to enable the catalog sync. Set to "-" to inherit from
   # global.enabled.
-  enabled: True
+  enabled: true
 
   # The name of the Docker image (including any tag) for consul-k8s
   # to run the sync program.
@@ -1229,7 +1085,7 @@ syncCatalog:
     # Name of the Consul namespace to register all
     # k8s services into. If the Consul namespace does not already exist,
     # it will be created. This will be ignored if `mirroringK8S` is true.
-    consulDestinationNamespace: "kandula"
+    consulDestinationNamespace: "default"
 
     # If true, k8s services will be registered into a Consul namespace
     # of the same name as their k8s namespace, optionally prefixed if
@@ -1310,9 +1166,11 @@ syncCatalog:
   # nodeSelector: |
   #   beta.kubernetes.io/arch: amd64
   # ```
-  #
+  #  nodeSelector: |
+    # app: kandula
   # @type: string
-  nodeSelector: null
+  # nodeSelector: |
+  #   app: kandula
 
   # Affinity Settings
   # This should be a multi-line string matching the affinity object
@@ -1325,19 +1183,6 @@ syncCatalog:
   # @type: string
   tolerations: null
 
-  serviceAccount:
-    # This value defines additional annotations for the mesh gateways' service account. This should be formatted as a
-    # multi-line string.
-    #
-    # ```yaml
-    # annotations: |
-    #   "sample/annotation1": "foo"
-    #   "sample/annotation2": "bar"
-    # ```
-    #
-    # @type: string
-    annotations: null
-
   # Resource settings for sync catalog pods.
   # @recurse: false
   # @type: map
@@ -1349,35 +1194,18 @@ syncCatalog:
       memory: "50Mi"
       cpu: "50m"
 
-  # Override global log verbosity level. One of "debug", "info", "warn", or "error".
-  # @type: string
-  logLevel: "info"
+  # Log verbosity level. One of "trace", "debug", "info", "warn", or "error".
+  logLevel: info
 
   # Override the default interval to perform syncing operations creating Consul services.
   # @type: string
   consulWriteInterval: null
-
-  # Extra labels to attach to the sync catalog pods. This should be a YAML map.
-  #
-  # Example:
-  #
-  # ```yaml
-  # extraLabels:
-  #   labelKey: label-value
-  #   anotherLabelKey: another-label-value
-  # ```
-  #
-  # @type: map
-  extraLabels: null
 
 # Configures the automatic Connect sidecar injector.
 connectInject:
   # True if you want to enable connect injection. Set to "-" to inherit from
   # global.enabled.
   enabled: false
-
-  # The number of deployment replicas.
-  replicas: 2
 
   # Image for consul-k8s that contains the injector
   # @type: string
@@ -1390,59 +1218,17 @@ connectInject:
   # to explicitly opt-out of injection.
   default: false
 
-  # Configures Transparent Proxy for Consul Service mesh services.
-  # Using this feature requires Consul 1.10.0-beta1+ and consul-k8s 0.26.0-beta1+.
-  transparentProxy:
-    # If true, then all Consul Service mesh will run with transparent proxy enabled by default,
-    # i.e. we enforce that all traffic within the pod will go through the proxy.
-    # This value is overridable via the "consul.hashicorp.com/transparent-proxy" pod annotation.
-    defaultEnabled: true
-
-    # If true, we will overwrite Kubernetes HTTP probes of the pod to point to the Envoy proxy instead.
-    # This setting is recommended because with traffic being enforced to go through the Envoy proxy,
-    # the probes on the pod will fail because kube-proxy doesn't have the right certificates
-    # to talk to Envoy.
-    # This value is also overridable via the "consul.hashicorp.com/transparent-proxy-overwrite-probes" annotation.
-    # Note: This value has no effect if transparent proxy is disabled on the pod.
-    defaultOverwriteProbes: true
-
-  # Configures metrics for Consul Connect services. All values are overridable
-  # via annotations on a per-pod basis.
-  metrics:
-    # If true, the connect-injector will automatically
-    # add prometheus annotations to connect-injected pods. It will also
-    # add a listener on the Envoy sidecar to expose metrics. The exposed
-    # metrics will depend on whether metrics merging is enabled:
-    #   - If metrics merging is enabled:
-    #     the Consul sidecar will run a merged metrics server
-    #     combining Envoy sidecar and Connect service metrics,
-    #     i.e. if your service exposes its own Prometheus metrics.
-    #   - If metrics merging is disabled:
-    #     the listener will just expose Envoy sidecar metrics.
-    # This will inherit from `global.metrics.enabled`.
-    defaultEnabled: "-"
-    # Configures the Consul sidecar to run a merged metrics server
-    # to combine and serve both Envoy and Connect service metrics.
-    # This feature is available only in Consul v1.10.0 or greater.
-    defaultEnableMerging: false
-    # Configures the port at which the Consul sidecar will listen on to return
-    # combined metrics. This port only needs to be changed if it conflicts with
-    # the application's ports.
-    defaultMergedMetricsPort: 20100
-    # Configures the port Prometheus will scrape metrics from, by configuring
-    # the Pod annotation `prometheus.io/port` and the corresponding listener in
-    # the Envoy sidecar.
-    # NOTE: This is *not* the port that your application exposes metrics on.
-    # That can be configured with the
-    # `consul.hashicorp.com/service-metrics-port` annotation.
-    defaultPrometheusScrapePort: 20200
-    # Configures the path Prometheus will scrape metrics from, by configuring the pod
-    # annotation `prometheus.io/path` and the corresponding handler in the Envoy
-    # sidecar.
-    # NOTE: This is *not* the path that your application exposes metrics on.
-    # That can be configured with the
-    # `consul.hashicorp.com/service-metrics-path` annotation.
-    defaultPrometheusScrapePath: "/metrics"
+  # Enables synchronization of Kubernetes health probe status with Consul.
+  # NOTE: It is highly recommended to enable TLS with this feature because it requires
+  # making calls to Consul clients across the cluster. Without TLS enabled, these calls
+  # could leak ACL tokens should the cluster network become compromised.
+  healthChecks:
+    # Enables the Consul Health Check controller which syncs the readiness status of
+    # connect-injected pods with Consul.
+    enabled: true
+    # If `healthChecks.enabled` is set to `true`, `reconcilePeriod` defines how often a full state
+    # reconcile is done after the initial reconcile at startup is completed.
+    reconcilePeriod: "1m"
 
   # Used to pass arguments to the injected envoy sidecar.
   # Valid arguments to pass to envoy can be found here: https://www.envoyproxy.io/docs/envoy/latest/operations/cli
@@ -1458,22 +1244,8 @@ connectInject:
   # @type: string
   imageConsul: null
 
-  # Override global log verbosity level. One of "debug", "info", "warn", or "error".
-  # @type: string
-  logLevel: "info"
-
-  serviceAccount:
-    # This value defines additional annotations for the injector service account. This should be formatted as a
-    # multi-line string.
-    #
-    # ```yaml
-    # annotations: |
-    #   "sample/annotation1": "foo"
-    #   "sample/annotation2": "bar"
-    # ```
-    #
-    # @type: string
-    annotations: null
+  # Log verbosity level. One of "debug", "info", "warn", or "error".
+  logLevel: info
 
   # Resource settings for connect inject pods.
   # @recurse: false
@@ -1485,14 +1257,6 @@ connectInject:
     limits:
       memory: "50Mi"
       cpu: "50m"
-
-  # Sets the failurePolicy for the mutating webhook. By default this will cause pods not part of the consul installation to fail scheduling while the webhook
-  # is offline. This prevents a pod from skipping mutation if the webhook were to be momentarily offline.
-  # Once the webhook is back online the pod will be scheduled.
-  # In some environments such as Kind this may have an undesirable effect as it may prevent volume provisioner pods from running
-  # which can lead to hangs. In these environments it is recommend to use "Ignore" instead.
-  # This setting can be safely disabled by setting to "Ignore".
-  failurePolicy: "Fail"
 
   # Selector for restricting the webhook to only
   # specific namespaces. This should be set to a multiline string.
@@ -1575,16 +1339,20 @@ connectInject:
     # injector will default to its automatic management mode that will assign
     # a service account to the injector to generate its own certificates.
     secretName: null
+
     # Base64-encoded PEM-encoded certificate bundle for the
     # CA that signed the TLS certificate that the webhook serves. This must
     # be set if secretName is non-null.
     caBundle: ""
+
     # Name of the file within the secret for
     # the TLS cert.
     certName: tls.crt
+
     # Name of the file within the secret for
     # the private TLS key.
     keyName: tls.key
+
   # Selector labels for connectInject pod assignment, formatted as a multi-line string.
   # ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodeselector
   #
@@ -1689,21 +1457,7 @@ controller:
   replicas: 1
 
   # Log verbosity level. One of "debug", "info", "warn", or "error".
-  # @type: string
-  logLevel: "info"
-
-  serviceAccount:
-    # This value defines additional annotations for the controller service account. This should be formatted as a
-    # multi-line string.
-    #
-    # ```yaml
-    # annotations: |
-    #   "sample/annotation1": "foo"
-    #   "sample/annotation2": "bar"
-    # ```
-    #
-    # @type: string
-    annotations: null
+  logLevel: info
 
   # Resource settings for controller pods.
   # @recurse: false
@@ -1817,7 +1571,7 @@ meshGateway:
     # The targetPort will be set to meshGateway.containerPort.
     port: 443
 
-    # Optionally set the nodePort value of the service if using a NodePort service.
+    # Optionally hardcode the nodePort of the service if using a NodePort service.
     # If not set and using a NodePort service, Kubernetes will automatically assign
     # a port.
     # @type: integer
@@ -1863,19 +1617,6 @@ meshGateway:
   # agent.
   # @type: integer
   hostPort: null
-
-  serviceAccount:
-    # This value defines additional annotations for the mesh gateways' service account. This should be formatted as a
-    # multi-line string.
-    #
-    # ```yaml
-    # annotations: |
-    #   "sample/annotation1": "foo"
-    #   "sample/annotation2": "bar"
-    # ```
-    #
-    # @type: string
-    annotations: null
 
   # Resource settings for mesh gateway pods.
   # NOTE: The use of a YAML string is deprecated. Instead, set directly as a
@@ -1997,19 +1738,6 @@ ingressGateways:
       # @type: string
       additionalSpec: null
 
-    serviceAccount:
-      # This value defines additional annotations for the ingress gateways' service account. This should be formatted
-      # as a multi-line string.
-      #
-      # ```yaml
-      # annotations: |
-      #   "sample/annotation1": "foo"
-      #   "sample/annotation2": "bar"
-      # ```
-      #
-      # @type: string
-      annotations: null
-
     # Resource limits for all ingress gateway pods
     # @recurse: false
     # @type: map
@@ -2074,7 +1802,7 @@ ingressGateways:
     # the gateway into. Requires `global.enableConsulNamespaces` to be true and
     # Consul Enterprise v1.7+ with a valid Consul Enterprise license.
     # Note: The Consul namespace MUST exist before the gateway is deployed.
-    consulNamespace: "kandula"
+    consulNamespace: "default"
 
   # Gateways is a list of gateway objects. The only required field for
   # each is `name`, though they can also contain any of the fields in
@@ -2182,24 +1910,11 @@ terminatingGateways:
     # @type: string
     annotations: null
 
-    serviceAccount:
-      # This value defines additional annotations for the terminating gateways' service account. This should be
-      # formatted as a multi-line string.
-      #
-      # ```yaml
-      # annotations: |
-      #   "sample/annotation1": "foo"
-      #   "sample/annotation2": "bar"
-      # ```
-      #
-      # @type: string
-      annotations: null
-
     # [Enterprise Only] `consulNamespace` defines the Consul namespace to register
     # the gateway into. Requires `global.enableConsulNamespaces` to be true and
     # Consul Enterprise v1.7+ with a valid Consul Enterprise license.
     # Note: The Consul namespace MUST exist before the gateway is deployed.
-    consulNamespace: "kandula"
+    consulNamespace: "default"
 
   # Gateways is a list of gateway objects. The only required field for
   # each is `name`, though they can also contain any of the fields in
@@ -2208,12 +1923,6 @@ terminatingGateways:
   # @type: array<map>
   gateways:
     - name: terminating-gateway
-
-# Configures a demo Prometheus installation.
-prometheus:
-  # When true, the Helm chart will install a demo Prometheus server instance
-  # alongside Consul.
-  enabled: false
 
 # Control whether a test Pod manifest is generated when running helm template.
 # When using helm install, the test Pod is not submitted to the cluster so this

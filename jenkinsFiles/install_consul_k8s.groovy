@@ -1,24 +1,42 @@
 // install filebaet, node-exporter, 
-node('slave1 || slave2') {
+pipeline {
+    agent {
+        label 'slaves'
+    }
+    stages {
+        stage('clone git repo'){
+            steps {
+                git branch: 'main', changelog: false, credentialsId: 'github', poll: false, url: 'git@github.com:dvaturi/Opsschool-project.git'
+            }
+        }
+        stage("update kubeconfig"){
+            steps {
+                sh """
+                    echo 'updating kubeconfig'
+                    aws eks --region=us-east-1 update-kubeconfig --name ${params.CLUSTER_NAME}
+                """   
+            }
+        }
 
-    stage('clone git repo'){
-        git branch: 'main', changelog: false, credentialsId: 'ac634407-8c13-4169-8ac3-029e1967a35c', poll: false, url: 'git@github.com:dvaturi/Opsschool-project.git'
+        stage('Install Cosnul on Kubernetes'){
+            steps {
+                dir('Opsschool-project/kubeFiles/'){
+                    sh """ 
+                        echo 'Install consul'
+                        helm repo add hashicorp https://helm.releases.hashicorp.com
+                        helm install --values values.yaml consul hashicorp/consul --create-namespace --namespace consul --version "1.0.0"
+                    """
+                }
+            }   
+        }  
     }
 
-    stage("Install Cosnul on Kubernetes") {
-        
-            withCredentials([kubeconfigFile(credentialsId: 'KubeAccess', variable: 'KUBECONFIG')]) {
-                dir('terraform_final_project/kubeFiles/') {
-                    sh '''
-                    ls
-                    export KUBECONFIG=\${KUBECONFIG}
-                    kubectl get pods
-                    echo "Install consul"
-                    kubectl create secret generic consul-gossip-encryption-key --from-literal=key="uDBV4e+LbFW3019YKPxIrg=="
-                    helm repo add hashicorp https://helm.releases.hashicorp.com
-                    helm install consul hashicorp/consul -f values_consul.yaml
-                    '''
-                }   
+    post {
+        success {
+            slackSend channel: '#webhooks', color: 'good', message: "${env.JOB_NAME} finished with ${currentBuild.currentResult}: build number#${env.BUILD_NUMBER}"
+        }
+        failure {
+            slackSend channel: '#webhooks', color: 'danger', message: "${env.JOB_NAME} finished with ${currentBuild.currentResult}: build number#${env.BUILD_NUMBER}"
         }
     }
 }

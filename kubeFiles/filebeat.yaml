@@ -3,7 +3,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: filebeat-config
-  namespace: kandula
+  namespace: default
   labels:
     k8s-app: filebeat
 data:
@@ -11,25 +11,13 @@ data:
     filebeat.inputs:
     - type: container
       paths:
-      - /var/log/syslog
-      - /var/log/auth.log
-      - /var/log/jenkins/jenkins.log
-      - /var/log/grafana/grafana.log
-      - /var/log/prometheus.log
-      - /var/log/consul/consul.log
-      - /var/log/containers/*.log
+        - /var/log/containers/*.log
       processors:
         - add_kubernetes_metadata:
             host: ${NODE_NAME}
             matchers:
             - logs_path:
-              - /var/log/syslog
-              - /var/log/auth.log
-              - /var/log/jenkins/jenkins.log
-              - /var/log/grafana/grafana.log
-              - /var/log/prometheus.log
-              - /var/log/consul/consul.log
-              - /var/log/containers/*.log
+                logs_path: "/var/log/containers/"
         - drop_event:
             when:
               not:
@@ -54,15 +42,9 @@ data:
     setup.template.name: "filebeat"
     setup.template.pattern: "filebeat-*"
     
-    # output.elasticsearch:
-    #   hosts: ["Elasticsearch.service.opsschool.consul:9200"]
-    #   index: "filebeat-k8s-%{[agent.version]}-%{+yyyy.MM.dd}"
-    output.logstash:
-      enabled: true
-      ssl.enabled: false
-      hosts: ["logstash.service.opsschool.consul:5044"]
-      filebeat.config.modules.path: /etc/filebeat/modules.d/*.yml
-      reload.enabled: false
+    output.elasticsearch:
+      hosts: ["Elasticsearch.service.opsschool.consul:9200"]
+      index: "filebeat-k8s-%{[agent.version]}-%{+yyyy.MM.dd}"
 ---
 
 apiVersion: apps/v1

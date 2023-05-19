@@ -54,16 +54,14 @@ resource "aws_instance" "bastion" {
       host        = self.public_ip
     }
   }
-
-
-  
   
   tags = {
     Name = "bastion-${regex(".$", data.aws_availability_zones.available.names[count.index])}"
     Owner = "Dean Vaturi"
     Purpose = var.purpose_tag
     consul_server = "false"
-    kandula_app = "false"
+    kandula_app = "yes"
+    bastion_server = "yes"
   }
 }
 
@@ -121,20 +119,6 @@ resource "aws_iam_policy_attachment" "bastion" {
   name       = "bastion"
   roles      = [aws_iam_role.bastion.name]
   policy_arn = aws_iam_policy.bastion.arn
-}
-
-# Attach the policy
-resource "aws_iam_policy_attachment" "bastion2" {
-  name       = "bastion2"
-  roles      = [aws_iam_role.bastion.name]
-  policy_arn = aws_iam_policy.s3_manage.arn
-}
-
-# Create the policy
-resource "aws_iam_policy" "bastion3" {
-  name        = "bastion3"
-  description = "Allows bastion to run aws commands and manage eks."
-  policy      = file("${path.module}/templates/policies/ec2-eks-manage.json")
 }
 
 # Create the instance profile
