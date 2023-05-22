@@ -13,7 +13,7 @@ module "eks" {
  tags = {
     Owner = "Dean Vaturi"
     Purpose = var.purpose_tag
-    # consul_server = "false"
+    consul_server = "false"
     # kandula_app = "true"
     eks_app = "true"
     GithubRepo  = "terraform-aws-eks"
@@ -61,6 +61,16 @@ resource "aws_security_group" "all_worker_mgmt_sg" {
    Owner = "Dean Vaturi"
    Purpose = var.purpose_tag
  }
+}
+
+resource "aws_security_group_rule" "https_tcp" {
+  description       = "Allow Prometheus TCP access"
+  from_port         = 443
+  to_port           = 443
+  protocol          = "tcp"
+  security_group_id = aws_security_group.all_worker_mgmt_sg.id
+  type              = "ingress"
+  cidr_blocks = var.internet_cidr
 }
 
 resource "aws_security_group_rule" "allow_ssh" {
@@ -118,6 +128,16 @@ resource "aws_security_group_rule" "lan_udp" {
   from_port         = 8301
   to_port           = 8301
   protocol          = "udp"
+  security_group_id = aws_security_group.all_worker_mgmt_sg.id
+  type              = "ingress"
+  cidr_blocks = var.internet_cidr
+}
+
+resource "aws_security_group_rule" "rpc_tcp" {
+  description       = "Allow LAN UDP access"
+  from_port         = 8300
+  to_port           = 8300
+  protocol          = "tcp"
   security_group_id = aws_security_group.all_worker_mgmt_sg.id
   type              = "ingress"
   cidr_blocks = var.internet_cidr
