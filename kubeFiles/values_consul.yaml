@@ -10,7 +10,7 @@ global:
   # this default via its component-specific "enabled" config. If false, no components
   # will be installed by default and per-component opt-in is required, such as by
   # setting `server.enabled` to true.
-  enabled: false
+  enabled: true
 
   # The default log level to apply to all components which do not otherwise override this setting.
   # It is recommended to generally not set this below "info" unless actively debugging due to logging verbosity.
@@ -661,7 +661,7 @@ server:
   # within Kubernetes to join that cluster, this should probably be false.
   # @default: global.enabled
   # @type: boolean
-  enabled: "-"
+  enabled: false
 
   # The name of the Docker image (including any tag) for the containers running
   # Consul server agents.
@@ -1138,7 +1138,7 @@ server:
 externalServers:
   # If true, the Helm chart will be configured to talk to the external servers.
   # If setting this to true, you must also set `server.enabled` to false.
-  enabled: false
+  enabled: true
 
   # An array of external Consul server hosts that are used to make
   # HTTPS connections from the components in this Helm chart.
@@ -1150,10 +1150,10 @@ externalServers:
   # should be the same, however, they may be different if you
   # wish to use separate hosts for the HTTPS connections.
   # @type: array<string>
-  hosts: [ ]
+  hosts: ["<type the ip of a consul server>"]
 
   # The HTTPS port of the Consul servers.
-  httpsPort: 8501
+  httpsPort: 8500
 
   # The GRPC port of the Consul servers.
   grpcPort: 8502
@@ -1239,7 +1239,7 @@ client:
   # This is only necessary if pod IPs in the k8s cluster are not directly routable
   # and the Consul servers are outside of the k8s cluster.
   # This also changes the clients' advertised IP to the `hostIP` rather than `podIP`.
-  exposeGossipPorts: false
+  exposeGossipPorts: true
 
   serviceAccount:
     # This value defines additional annotations for the client service account. This should be formatted as a multi-line
@@ -1485,7 +1485,7 @@ dns:
   # for default DNS resolution. The DNS lookups fall back to the nameserver IPs
   # listed in /etc/resolv.conf if not found in Consul.
   # @type: boolean
-  enableRedirection: "-"
+  enableRedirection: true
 
   # Used to control the type of service created. For
   # example, setting this to "LoadBalancer" will create an external load

@@ -63,10 +63,20 @@ resource "aws_security_group" "all_worker_mgmt_sg" {
  }
 }
 
-resource "aws_security_group_rule" "https_tcp" {
-  description       = "Allow Prometheus TCP access"
+resource "aws_security_group_rule" "ingress_cluster_443" {
+  description       = "Cluster API to node groups"
   from_port         = 443
   to_port           = 443
+  protocol          = "tcp"
+  security_group_id = aws_security_group.all_worker_mgmt_sg.id
+  type              = "ingress"
+  cidr_blocks = var.internet_cidr
+}
+
+resource "aws_security_group_rule" "ingress_cluster_kubelet" {
+  description       = "Cluster API to node kubelets"
+  from_port         = 10250
+  to_port           = 10250
   protocol          = "tcp"
   security_group_id = aws_security_group.all_worker_mgmt_sg.id
   type              = "ingress"
@@ -173,10 +183,83 @@ resource "aws_security_group_rule" "consul_dns_udp1" {
   cidr_blocks = var.internet_cidr
 }
 
+resource "aws_security_group_rule" "ingress_self_coredns_tcp" {
+  description       = "Node to node CoreDNS"
+  from_port         = 53
+  to_port           = 53
+  protocol          = "tcp"
+  security_group_id = aws_security_group.all_worker_mgmt_sg.id
+  type              = "ingress"
+  self        = true
+}
 
+resource "aws_security_group_rule" "ingress_self_coredns_udp" {
+  description       = "Node to node CoreDNS"
+  from_port         = 53
+  to_port           = 53
+  protocol          = "udp"
+  security_group_id = aws_security_group.all_worker_mgmt_sg.id
+  type              = "ingress"
+  self        = true
+}
+ # metrics-server
+resource "aws_security_group_rule" "ingress_cluster_4443_webhook" {
+  description       = "Cluster API to node 4443/tcp webhook"
+  from_port         = 4443
+  to_port           = 4443
+  protocol          = "tcp"
+  security_group_id = aws_security_group.all_worker_mgmt_sg.id
+  type              = "ingress"
+  cidr_blocks = var.internet_cidr
+}
+# prometheus-adapter
+resource "aws_security_group_rule" "ingress_cluster_6443_webhook" {
+  description       = "Cluster API to node 6443/tcp webhook"
+  from_port         = 6443
+  to_port           = 6443
+  protocol          = "tcp"
+  security_group_id = aws_security_group.all_worker_mgmt_sg.id
+  type              = "ingress"
+  cidr_blocks = var.internet_cidr
+}
+# Karpenter
+resource "aws_security_group_rule" "ingress_cluster_8443_webhook" {
+  description       = "Cluster API to node 8443/tcp webhook"
+  from_port         = 8443
+  to_port           = 8443
+  protocol          = "tcp"
+  security_group_id = aws_security_group.all_worker_mgmt_sg.id
+  type              = "ingress"
+  cidr_blocks = var.internet_cidr
+}
+# ALB controller, NGINX
+resource "aws_security_group_rule" "ingress_cluster_9443_webhook" {
+  description       = "Cluster API to node 9443/tcp webhook"
+  from_port         = 9443
+  to_port           = 9443
+  protocol          = "tcp"
+  security_group_id = aws_security_group.all_worker_mgmt_sg.id
+  type              = "ingress"
+  cidr_blocks = var.internet_cidr
+}
+resource "aws_security_group_rule" "eks_outbound_anywhere" {
+  description       = "allow outbound traffic to anywhere"
+  from_port         = 0
+  protocol          = "-1"
+  security_group_id = aws_security_group.all_worker_mgmt_sg.id
+  to_port           = 0
+  type              = "egress"
+  cidr_blocks       = var.internet_cidr
+}
 resource "kubernetes_namespace" "kandula" {
   metadata {
     name = "kandula"
+  }
+}
+
+resource "kubernetes_namespace" "consul" {
+  metadata {
+    name = "consul"
   }
 }
 
@@ -205,4 +288,45 @@ resource "aws_iam_role_policy_attachment" "nodes-policy" {
   for_each   = module.eks.eks_managed_node_groups
   role       = each.value.iam_role_name
   policy_arn = aws_iam_policy.eks-cluster.arn
+}
+
+resource "kubernetes_cluster_role_binding" "consul-sync-catalog-cluster-role-binding" {
+  metadata {
+    name = "consul-sync-catalog-rolebinding"
+
+    annotations = {
+      "kubectl.kubernetes.io/last-applied-configuration" = jsonencode({
+        apiVersion: "rbac.authorization.k8s.io/v1",
+        kind:       "ClusterRoleBinding",
+        metadata: {
+          annotations: {},
+          name:        "consul-sync-catalog-rolebinding",
+        },
+        roleRef: {
+          apiGroup: "rbac.authorization.k8s.io",
+          kind:     "ClusterRole",
+          name:     "view",
+        },
+        subjects: [
+          {
+            kind:      "ServiceAccount",
+            name:      "consul-consul-sync-catalog",
+            namespace: kubernetes_namespace.consul.metadata[0].name,
+          },
+        ],
+      })
+    }
+  }
+
+  subject {
+    kind      = "ServiceAccount"
+    name      = "consul-consul-sync-catalog"
+    namespace = kubernetes_namespace.consul.metadata[0].name
+  }
+
+  role_ref {
+    kind     = "ClusterRole"
+    name     = "view"
+    api_group = "rbac.authorization.k8s.io"
+  }
 }

@@ -24,9 +24,9 @@ pipeline {
                     sh """ 
                         echo 'Install consul'
                         helm repo add hashicorp https://helm.releases.hashicorp.com
-                        kubectl create secret generic consul-gossip-encryption-key --from-literal=key="uDBV4e+LbFW3019YKPxIrg=="
+                        kubectl create secret generic consul-gossip-encryption-key --from-literal=key="uDBV4e+LbFW3019YKPxIrg==" --namespace consul
                         chmod 600 /home/ubuntu/.kube/config
-                        helm install consul hashicorp/consul -f values_consul.yaml
+                        helm install --values values_consul.yaml consul hashicorp/consul  --namespace consul
                     """
                 }
             }   

@@ -110,6 +110,26 @@ resource "aws_security_group_rule" "consul_dns_udp" {
   cidr_blocks = var.consul_cidr_block
 }
 
+resource "aws_security_group_rule" "consul_eks_httpsPort" {
+  description       = "consul eks catalog sync https port"
+  from_port         = 8501
+  protocol          = "tcp"
+  security_group_id = aws_security_group.consul_sg.id
+  to_port           = 8501
+  type              = "ingress"
+  cidr_blocks = var.internet_cidr
+}
+
+resource "aws_security_group_rule" "consul_eks_grpcPort" {
+  description       = "consul eks catalog sync grpc port"
+  from_port         = 8502
+  protocol          = "tcp"
+  security_group_id = aws_security_group.consul_sg.id
+  to_port           = 8502
+  type              = "ingress"
+  cidr_blocks = var.internet_cidr
+}
+
 resource "aws_security_group_rule" "consul_outbound_anywhere" {
   description       = "allow outbound traffic to anywhere"
   from_port         = 0

@@ -1,6 +1,14 @@
 {
   "advertise_addr": "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}",
   "client_addr": "0.0.0.0",
+  "addresses": {
+    "grpc": "0.0.0.0",
+    "https": "0.0.0.0"
+  },
+  "ports": {
+    "grpc": 8502,
+    "https": 8501
+  },
   "data_dir": "/opt/consul",
   "datacenter": "opsschool",
   "encrypt": "uDBV4e+LbFW3019YKPxIrg==",
