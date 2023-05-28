@@ -27,9 +27,24 @@
  - Go into **manage Jenkins>configure system* and search for Slack.
 then configure as such "Workspace: *opsschool*, Credentials: *select the Jenkins creds you created earlier*, Default channel / member id: *#webhooks* and *save*
 
+# Create 2 Jenkins pipeline jobs and make sure you pull the code through remote SCM with the GitHub creds
+* make sure to create the deploy_app and destroy_app with "This project is parameterized" checked. create 1 parameter **CLUSTER_NAME** and leave the default blank.
+
+- eks_consul_install - Opsschool-project/jenkinsFiles/install_consul_k8s.groovy
+- eks_servoces_install - Opsschool-project/jenkinsFiles/install_k8s_services.groovy
+
+- Run them by the following order:
+1. eks_consul_install
+2. eks_servoces_install
+
+
 # Create 3 Jenkins pipeline jobs and make sure you pull the code through remote SCM with the GitHub creds
 * make sure to create the deploy_app and destroy_app with "This project is parameterized" checked. create 1 parameter **CLUSTER_NAME** and leave the default blank.
 
 - build_app - Opsschool-project/jenkinsFiles/build_app.groovy
 - deploy_app - Opsschool-project/jenkinsFiles/deploy_app.groovy
 - destroy_app - Opsschool-project/jenkinsFiles/destory_app.groovy
+
+1. run build_app in order to build the app
+2. run deploy_app in order to deploy the app to the EKS cluster
+3. run destroy_app  in order to destroy the app and its servoce from the EKS cluster
