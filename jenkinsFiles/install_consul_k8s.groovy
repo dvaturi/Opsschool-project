@@ -1,4 +1,4 @@
-// install filebaet, node-exporter, 
+// install consul
 pipeline {
     agent {
         label 'slaves'

@@ -15,7 +15,7 @@
 - Add Description
 - Select the "**Number of executors**" - "**2**"
 - Type **Remote root directory** in "**Number of executors**" bracket - "**Home/ubuntu/jenkins**"
-- Type **Lable** in the "**Labels**" bracket - "**slave1**" and "**slave2**" (a name per slave that is being created)
+- Type **Lable** in the "**Labels**" bracket - "**slaves**"
 - Select **Use this node as much as possible** in the "**Usage**" bracket
 - Select **Launch agents via SSH** in the "**Launch method**" bracket
 - Type **IP** in the "**Host**" bracket

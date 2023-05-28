@@ -1,18 +1,31 @@
-// install filebaet, node-exporter, 
-node('slave1'){
-
-    stage('clone git repo'){
-        git branch: 'master', changelog: false, credentialsId: 'github', poll: false, url: 'git@github.com:mosheeven/final_project.git'
+// install node_exporter, filebeat, config coredns
+pipeline {
+    agent {
+        label 'slaves'
     }
+    stages {
+        stage('clone git repo'){
+            steps {
+                git branch: 'main', changelog: false, credentialsId: 'github', poll: false, url: 'git@github.com:dvaturi/Opsschool-project.git'
+            }
+        }
 
-    stage("Install Cosnul on Kubernetes") {
+        stage("update kubeconfig"){
+            steps {
+                sh """
+                    echo 'updating kubeconfig'
+                    aws eks --region=us-east-1 update-kubeconfig --name ${params.CLUSTER_NAME}
+                """   
+            }
+        }
         
-            withCredentials([kubeconfigFile(credentialsId: 'KubeAccess', variable: 'KUBECONFIG')]) {
-                dir('terraform_final_project/kubeFiles/') {
+        stage('Install node_exporter and filebeat on Kubernetes'){
+            steps {
+                dir('Opsschool-project/kubeFiles/'){
                     sh '''
-                    export KUBECONFIG=\${KUBECONFIG}
                     echo "apply changes for coredns"
-                    kubectl apply -f coredns.yaml
+                    chmod +x update-coredns-configmap.sh
+                    ./update-configmap.sh
 
                     echo "node exporter"
                     helm repo add bitnami https://charts.bitnami.com/bitnami
@@ -22,6 +35,16 @@ node('slave1'){
                     kubectl apply -f filebeat.yaml
                     '''
                 }   
+            }
+        }
+    }
+    
+    post {
+        success {
+            slackSend channel: '#webhooks', color: 'good', message: "${env.JOB_NAME} finished with ${currentBuild.currentResult}: build number#${env.BUILD_NUMBER}"
+        }
+        failure {
+            slackSend channel: '#webhooks', color: 'danger', message: "${env.JOB_NAME} finished with ${currentBuild.currentResult}: build number#${env.BUILD_NUMBER}"
         }
     }
 }
