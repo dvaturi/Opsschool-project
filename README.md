@@ -42,6 +42,38 @@ use the openvpn official client in order to connect to the openvpn server that h
 click on the icon of the "openvpn connect" app and then import profile.
 wait for the client to connect to the server and then move on to the next section
 
+## Configure the Kubernetes cluster
+- make sure you are on a machine with owner permissions to the EKS cluster
+After the environement is up run the following to update your kubeconfig file (you can get the `cluster_name` value from the cluster_name output in terraform)
+```bash
+aws eks --region=us-east-1 update-kubeconfig --name <cluster_name>
+```
+- Add the user/group/roles of the AWS account to be able to see information and run commands through Jenkins etc...
+- Do it by running the following command:
+```bash
+kubectl get configmap aws-auth -n kube-system -o yaml > aws-auth.yaml
+```
+- After running the command a file called **aws-auth.yaml** will be added to your path, edit it carefully and add the user/group/role with its permissions to provide permissions for the Kubernetes cluster as such
+```
+mapRoles: |
+<previous configuration>
+
+ - groups:
+      - system:masters
+      rolearn: arn:aws:iam::447072968892:user/opschooladmin
+      username: opsschooladmin
+ - groups:
+      - system:masters
+      rolearn: arn:aws:iam::<need to change>:role/Jenkins
+      username: Jenkins
+<other configuration>
+...
+```
+- Run the following command to update the Kubernetes config map:
+```bash
+kubectl apply -f aws-auth.yaml
+``` 
+
 ## Connect to one of the bastions
 (Temp, will be automated) connect to one of the bastions with ssh (command will be prompted at the end of the terraform apply):
 ```bash
@@ -53,33 +85,8 @@ ssh -i "~/.ssh/opsschoolproject" ubuntu@ip.of.the.bastion
 cd ansible
 ansible-playbook all.yaml
 ```
-## Configure Jenkins master and 2 slaves
+## Configure Jenkins master and 2 slaves (Need to update)
 - Follow the instructions to configure Jenkins [Jenkins_config](https://github.com/dvaturi/Opsschool-project/blob/main/Jenkins_config.md)
-
-## Configure the Kubernetes cluster
-- make sure you are on a machine with owner permissions to the EKS cluster
-After the environement is up run the following to update your kubeconfig file (you can get the `cluster_name` value from the cluster_name output in terraform)
-```bash
-aws eks --region=us-east-1 update-kubeconfig --name <cluster_name>
-```
-- Add the user/group/roles of the AWS account to be able to see information and run commands through Jenkins etc...
-- Do it by running the following command **kubectl get configmap aws-auth -n kube-system -o yaml > aws-auth.yaml**
-- After running the command a file called **aws-auth.yaml** will be added to your path, edit it carefully and add the user/group/role with its permissions to provide permissions for the Kubernetes cluster as such
-```
-mapRoles: |
-...
-
- - groups:
-      - system:masters
-      rolearn: arn:aws:iam::447072968892:user/opschooladmin
-      username: opsschooladmin
- - groups:
-      - system:masters
-      rolearn: arn:aws:iam::<need to change>:role/Jenkins
-      username: Jenkins
-...
-```
-- Run the following command to update the Kubernetes config map **kubectl apply -f aws-auth.yaml**
 
 
 ## Run the app
@@ -98,7 +105,7 @@ mapRoles: |
 - delete the file **Opsschool-project/terraform/2.environment/aws-auth.yaml** - its the old permissions file for the EKS cluster you just deleted.
 - That's it, you are done and the project has been destroyed completely 
 
-## Full Project Workflow videos.
+## Full Project Workflow videos. (Need to Update)
 - [1.s3 bucket creation](https://drive.google.com/file/d/1hTJXzo2EjZOdMbla9gXBNNsCqfVdA5iq/view?usp=share_link)
 - [2.environment creation](https://drive.google.com/file/d/1TYrkyh5RcH_Zp9mEOhlDJ1DZlIaRpZtF/view?usp=share_link)
 - [3.ansible playbook install](https://drive.google.com/file/d/1ZBCIEv_W3vqhVJnr9Qi-XF6dMBGIWWtF/view?usp=share_link)
@@ -108,5 +115,5 @@ mapRoles: |
 - [7.deploy job](https://drive.google.com/file/d/1j4hOWDwtI0t57c-3p94JcZYcWIOBOSDQ/view?usp=share_link)
 - [8.kandula app](https://drive.google.com/file/d/1oxFrSfpGPCmUMjIQxGEyW4D7FWYwGhQc/view?usp=share_link)
 
-## Presentation
+## Presentation (Need to Update)
 - [Opsschool-project](https://www.canva.com/design/DAFgeyxQBVo/WulIo7wy20_pV5dBShm8pA/view?utm_content=DAFgeyxQBVo&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink)
