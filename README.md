@@ -57,6 +57,7 @@ kubectl get configmap aws-auth -n kube-system -o yaml > aws-auth.yaml
 ```
 mapRoles: |
 <previous configuration>
+...
 
  - groups:
       - system:masters
@@ -66,8 +67,10 @@ mapRoles: |
       - system:masters
       rolearn: arn:aws:iam::<need to change>:role/Jenkins
       username: Jenkins
-<other configuration>
+
 ...
+<other configuration>
+
 ```
 - Run the following command to update the Kubernetes config map:
 ```bash
