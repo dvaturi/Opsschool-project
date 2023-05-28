@@ -8,8 +8,9 @@
 
 ## Prerequisites
 - Install [Terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli) on your workstation/server
-- Install [aws cli](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html) on your workstation/server
-- Install [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) on your workstation/server
+- Install [aws cli](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html) on your workstation/server (automated on server)
+- Install [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) on your workstation/server (automate on server)
+- Install [helm](https://developer.hashicorp.com/consul/docs/k8s/helm) on your workstation/server/Jenkins slave. (automated on server/slave)
 - Create a keypair for AWS (in the specific aws_region you are working in, with the specific name ```opsschoolproject``` and store the pem key under ~/.ssh/ then run the following command ```chmod 400 ~/.ssh/opsschoolproject.pem```)
 - **make sure to modify var.source_pem_file_path at the terraform/2.environment/variables.tf var file if needed.
 
