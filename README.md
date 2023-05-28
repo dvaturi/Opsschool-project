@@ -11,7 +11,10 @@
 - Install [aws cli](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html) on your workstation/server (automated on server)
 - Install [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) on your workstation/server (automate on server)
 - Install [helm](https://developer.hashicorp.com/consul/docs/k8s/helm) on your workstation/server/Jenkins slave. (automated on server/slave)
-- Create a keypair for AWS (in the specific aws_region you are working in, with the specific name ```opsschoolproject``` and store the pem key under ~/.ssh/ then run the following command ```chmod 400 ~/.ssh/opsschoolproject.pem```)
+- Create a keypair for AWS (in the specific aws_region you are working in, with the specific name ```opsschoolproject``` and store the pem key under ~/.ssh/ then run the following command:
+```bash
+chmod 400 ~/.ssh/opsschoolproject.pem
+```
 - **make sure to modify var.source_pem_file_path at the terraform/2.environment/variables.tf var file if needed.
 
 ## Variables
@@ -22,14 +25,14 @@
 ## Run Terraform
 Run the following to bring the s3 bucket up (for the env tfstate file):
 ```bash
-cd terraform/1.s3_creation/
+cd ./Opsschool-project/terraform/1.s3_creation/
 terraform init
 terraform apply --auto-approve
 ```
 
 Run the following to bring the environment up:
 ```bash
-cd terraform/2.environment/
+cd ./Opsschool-project/terraform/2.environment/
 terraform init
 terraform apply --auto-approve
 ```
@@ -105,8 +108,16 @@ ansible-playbook all.yaml
 - go to the s3 service in the AWS UI, and look for the following s3 bucket: "opsschool-vpn-client" Get in and delete opsschool.ovpn file.
 - cd Opsschool-project/terraform/2.environment and "terraform destroy -auto-approve"
 - go to the s3 service in the AWS UI, and look for the following s3 bucket: "opsschool-terraform-state-dean" Get in and delete all the state files **including the versioning**
-- cd Opsschool-project/terraform/1.s3_creation and "terraform destroy -auto-approve"
+- destroy the s3 bucket using terraform:
+```bash
+cd ./Opsschool-project/terraform/1.s3_creation
+terraform destroy -auto-approve
+```
 - delete the file **Opsschool-project/terraform/2.environment/aws-auth.yaml** - its the old permissions file for the EKS cluster you just deleted.
+```bash 
+sudo rm -rf  ./Opsschool-project/terraform/2.environment/aws-auth.yaml
+```
+
 - That's it, you are done and the project has been destroyed completely 
 
 ## Full Project Workflow videos. (Need to Update)
