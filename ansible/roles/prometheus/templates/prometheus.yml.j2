@@ -23,11 +23,11 @@ scrape_configs:
     static_configs:
       - targets: ['localhost:9090']
 
-  - job_name: 'node_exporter'
+  - job_name: 'node-exporter'
     consul_sd_configs:
       - server: '{{ hostvars[inventory_hostname]["ansible_default_ipv4"]["address"] }}:8500'
         services:
-          - 'node_exporter'
+          - 'node-exporter'
     relabel_configs:
       - source_labels: ['__address__']
         target_label: '__address__'
@@ -38,7 +38,7 @@ scrape_configs:
       - source_labels: ['__meta_consul_dc']
         target_label: 'consul_dc_name'
 
-  - job_name: 'k8s-node_exporter'
+  - job_name: 'k8s-node-exporter'
     consul_sd_configs:
       - server: '{{ hostvars[inventory_hostname]["ansible_default_ipv4"]["address"] }}:8500'
         services:
