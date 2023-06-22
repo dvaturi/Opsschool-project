@@ -26,6 +26,16 @@ pipeline {
                 sh "trivy image --timeout 5m --exit-code=0 --severity CRITICAL,HIGH,UNKNOWN,LOW,MEDIUM $customImage.id"
             }
         }
+        stage('scan image with snyk') {
+            steps {
+                script {
+                var = sh(script:'snyk-linux container test dvaturi/kandula:latest --file=Dockerfile',returnStatus:true)
+                echo "error code = ${var}"
+                if (var != 0){
+                    echo "Vunerability found!"
+                }
+                }
+            }
         stage('run docker'){
             steps {
                 script {

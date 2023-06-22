@@ -47,6 +47,8 @@ spec:
     metadata:
       labels:
         app: backend
+      annotations: 
+        date: "+%H:%M:%S %d/%m/%y"  
     spec:
       affinity:
         podAntiAffinity:
@@ -67,6 +69,6 @@ spec:
           protocol: TCP
         env:
         - name: FLASK_APP
-          value: kandula
+          value: "kandula"
         - name: SECRET_KEY
-          value: kandula123
+          value: "kandula123"
