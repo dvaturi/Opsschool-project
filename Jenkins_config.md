@@ -35,7 +35,7 @@ then configure as such "Workspace: *opsschool*, Credentials: *select the Jenkins
 
 - Run them by the following order:
 1. eks_consul_install
-2. eks_servoces_install
+2. eks_services_install
 
 
 # Create 3 Jenkins pipeline jobs and make sure you pull the code through remote SCM with the GitHub creds
