@@ -28,7 +28,7 @@ updated_configmap_file=$(mktemp)
 echo "$current_config" | awk -v updated_corefile="$updated_corefile" '/Corefile:/{flag=1;print;next}/^kind:/{flag=0}flag{print updated_corefile}' > "$updated_configmap_file"
 
 # Apply the updated ConfigMap
-kubectl apply -f "$updated_configmap_file" -n kube-system
+kubectl apply -f "$updated_configmap_file" -n kube-system --validate=false
 
 # Clean up the temporary file
 rm "$updated_configmap_file"
