@@ -20,16 +20,16 @@ pipeline {
 
         stage('Install Cosnul on Kubernetes'){
             steps {
-                dir('Opsschool-project/kubeFiles/'){
-                    sh """ 
-                        echo 'Install consul'
-                        helm repo add hashicorp https://helm.releases.hashicorp.com
-                        kubectl create secret generic consul-gossip-encryption-key --from-literal=key="uDBV4e+LbFW3019YKPxIrg==" --namespace consul
-                        chmod 600 /home/ubuntu/.kube/config
-                        pwd
-                        helm install --values ./values_consul.yaml consul hashicorp/consul  --namespace consul
-                    """
-                }
+                
+                sh """ 
+                    echo 'Install consul'
+                    helm repo add hashicorp https://helm.releases.hashicorp.com
+                    kubectl create secret generic consul-gossip-encryption-key --from-literal=key="uDBV4e+LbFW3019YKPxIrg==" --namespace consul
+                    chmod 600 /home/ubuntu/.kube/config
+                    pwd
+                    helm install --values ./kubeFiles/values_consul.yaml consul hashicorp/consul  --namespace consul
+                """
+                
             }   
         }  
     }
