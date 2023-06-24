@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Get the IP address of the consul-dns service
-consul_dns_ip=$(kubectl get svc consul-dns -n consul -o jsonpath='{.spec.clusterIP}')
+consul_dns_ip=$(kubectl get svc consul-consul-dns -n consul -o jsonpath='{.spec.clusterIP}')
 
 # Exit if the consul-dns IP address is not found
 if [ -z "$consul_dns_ip" ]; then
