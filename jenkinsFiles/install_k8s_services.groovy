@@ -21,20 +21,18 @@ pipeline {
         
         stage('Install node_exporter and filebeat on Kubernetes'){
             steps {
-                dir('Opsschool-project/kubeFiles/'){
-                    sh '''
-                    echo "apply changes for coredns"
-                    chmod +x update-coredns-configmap.sh
-                    ./update-configmap.sh
+                sh '''
+                echo "apply changes for coredns"
+                chmod +x ./kubeFiles/update-coredns-configmap.sh
+                ./kubeFiles//update-configmap.sh
 
-                    echo "node exporter"
-                    helm repo add bitnami https://charts.bitnami.com/bitnami
-                    helm install k8s bitnami/node-exporter -f values_node-exporter.yaml  
+                echo "node exporter"
+                helm repo add bitnami https://charts.bitnami.com/bitnami
+                helm install k8s bitnami/node-exporter -f values_node-exporter.yaml  
 
-                    echo "filebeat"
-                    kubectl apply -f filebeat.yaml
-                    '''
-                }   
+                echo "filebeat"
+                kubectl apply -f ./kubeFiles/filebeat.yaml
+                ''' 
             }
         }
     }
