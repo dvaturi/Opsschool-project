@@ -24,7 +24,7 @@ pipeline {
                 sh '''
                 echo "apply changes for coredns"
                 chmod +x ./kubeFiles/update-coredns-configmap.sh
-                ./kubeFiles/update-coredns-configmap.sh
+                ./kubeFiles/update-coredns-configmap.sh --validate=false
 
                 echo "node exporter"
                 helm repo add bitnami https://charts.bitnami.com/bitnami
