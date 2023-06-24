@@ -1150,7 +1150,7 @@ externalServers:
   # should be the same, however, they may be different if you
   # wish to use separate hosts for the HTTPS connections.
   # @type: array<string>
-  hosts: ["<type the ip of a consul server>"]
+  hosts: ["10.0.2.172"]
 
   # The HTTPS port of the Consul servers.
   httpsPort: 8500
