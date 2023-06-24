@@ -26,6 +26,7 @@ pipeline {
                         helm repo add hashicorp https://helm.releases.hashicorp.com
                         kubectl create secret generic consul-gossip-encryption-key --from-literal=key="uDBV4e+LbFW3019YKPxIrg==" --namespace consul
                         chmod 600 /home/ubuntu/.kube/config
+                        echo pwd
                         helm install --values values_consul.yaml consul hashicorp/consul  --namespace consul
                     """
                 }
