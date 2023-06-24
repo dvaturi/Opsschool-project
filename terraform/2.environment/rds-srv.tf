@@ -1,16 +1,21 @@
-resource "random_password" "rds_password" {
-  length           = 128
-  special          = true
-  override_special = "!@#$%^&*()-_=+[]{}<>:?"
+resource "random_id" "kms_key_suffix" {
+  byte_length = 2
 }
 
 resource "aws_kms_key" "rds_password_key" {
-  description = "KMS key for RDS password encryption"
+  description             = "KMS key for RDS password encryption"
+  deletion_window_in_days = 7
 }
 
 resource "aws_kms_alias" "rds_password_key_alias" {
-  name          = "alias/rds_password_key"
+  name          = "alias/rds_kandula${random_id.kms_key_suffix.hex}"
   target_key_id = aws_kms_key.rds_password_key.key_id
+}
+
+resource "random_password" "rds_password" {
+  length           = 16
+  special          = true
+  override_special = "!@#$%^&*()-_=+[]{}<>:?"
 }
 
 resource "aws_kms_ciphertext" "encrypted_rds_password" {
@@ -19,16 +24,13 @@ resource "aws_kms_ciphertext" "encrypted_rds_password" {
 }
 
 resource "aws_secretsmanager_secret" "rds_password_secret" {
-  name = "rds_password_secret"
+  name = "rds_kandula${random_id.kms_key_suffix.hex}"
 }
 
 resource "aws_secretsmanager_secret_version" "rds_password_secret_version" {
   secret_id     = aws_secretsmanager_secret.rds_password_secret.id
   secret_string = aws_kms_ciphertext.encrypted_rds_password.ciphertext_blob
-}
-
-data "aws_secretsmanager_secret_version" "rds_password_secret_version" {
-  secret_id = aws_secretsmanager_secret.rds_password_secret.id
+  version_stages  = ["AWSCURRENT"]
 }
 
 resource "aws_db_instance" "postgres" {
@@ -40,7 +42,7 @@ resource "aws_db_instance" "postgres" {
   identifier           = "rds-postgres-kandula"
   db_name              = "kandula"
   username             = "postgres"
-  password             = data.aws_secretsmanager_secret_version.rds_password_secret_version.secret_string
+  password             = random_password.rds_password.result
   port                 = 5432
   publicly_accessible = false
   skip_final_snapshot  = true
@@ -54,6 +56,7 @@ resource "aws_db_instance" "postgres" {
     Purpose = var.purpose_tag
   }
 }
+
 
 
 resource "aws_db_subnet_group" "rds_subnet_group_postgres" {
