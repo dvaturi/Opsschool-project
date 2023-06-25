@@ -29,7 +29,7 @@ pipeline {
                     output=\$(dig +answer consul.service.opsschool.consul:8600)
                     ip=\$(echo "\$output" | grep -oE 'SERVER: ([^#]+)' | awk '{print \$NF}')
                     sed -i "s|<consul-server-ip>|\$ip|g" ./kubeFiles/values_consul.yaml
-                    helm install --values ./kubeFiles/values_consul.yaml consul hashicorp/consul --namespace consul
+                    helm install --values ./kubeFiles/values_consul.yaml consul hashicorp/consul  --namespace consul
                 """
             }
         }
