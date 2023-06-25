@@ -18,7 +18,7 @@ pipeline {
             }
         }
 
-        stage('Install Cosnul on Kubernetes'){
+        stage('Install Consul on Kubernetes') {
             steps {
                 sh """ 
                     echo 'Install consul'
@@ -26,14 +26,14 @@ pipeline {
                     kubectl delete secret consul-gossip-encryption-key --namespace consul > /dev/null 2>&1
                     kubectl create secret generic consul-gossip-encryption-key --from-literal=key="uDBV4e+LbFW3019YKPxIrg==" --namespace consul
                     chmod 600 /home/ubuntu/.kube/config
-                    output=$(dig +answer consul.service.opsschool.consul:8600)
+                    output=\$(dig +answer consul.service.opsschool.consul:8600)
                     ip=\$(echo "\$output" | grep -oE 'SERVER: ([^#]+)' | awk '{print \$NF}')
-                    sed -i "s|<consul-server-ip>|$ip|g" ./kubeFiles/values_consul.yaml
-                    helm install --values ./kubeFiles/values_consul.yaml consul hashicorp/consul  --namespace consul
+                    sed -i "s|<consul-server-ip>|\$ip|g" ./kubeFiles/values_consul.yaml
+                    helm install --values ./kubeFiles/values_consul.yaml consul hashicorp/consul --namespace consul
                 """
             }   
-        }  
-    }
+        }
+
 
     post {
         success {
