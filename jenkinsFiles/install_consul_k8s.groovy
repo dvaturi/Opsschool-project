@@ -26,7 +26,7 @@ pipeline {
                     kubectl create secret generic consul-gossip-encryption-key --from-literal=key="uDBV4e+LbFW3019YKPxIrg==" --namespace consul
                     chmod 600 /home/ubuntu/.kube/config
                     ip=\$(dig +short consul.service.consul | sed 's/^/"/; s/$/"/' | paste -sd ",")
-                    sed -i "s|"<consul-server-ip>"|\$ip|g" ./kubeFiles/values_consul.yaml
+                    sed -i "s|<consul-server-ip>|\$ip|g" ./kubeFiles/values_consul.yaml
                     helm install --values ./kubeFiles/values_consul.yaml consul hashicorp/consul  --namespace consul
                 '''
             }   
