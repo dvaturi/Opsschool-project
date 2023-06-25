@@ -263,6 +263,12 @@ resource "kubernetes_namespace" "consul" {
   }
 }
 
+resource "kubernetes_namespace" "filebeat" {
+  metadata {
+    name = "filebeat"
+  }
+}
+
 module "iam_iam-assumable-role-with-oidc" {
   source                        = "terraform-aws-modules/iam/aws//modules/iam-assumable-role-with-oidc"
   version                       = "5.13.0"
