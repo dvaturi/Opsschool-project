@@ -34,7 +34,8 @@ pipeline {
                 if (var != 0){
                     echo "Vunerability found!"
                 }
-            }
+             }
+          }
         }
         stage('run docker'){
             steps {
