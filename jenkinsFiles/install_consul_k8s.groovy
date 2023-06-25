@@ -18,7 +18,7 @@ pipeline {
             }
         }
 
-        stage('Install Consul on Kubernetes') {
+        stage('Install Cosnul on Kubernetes'){
             steps {
                 sh """ 
                     echo 'Install consul'
@@ -30,9 +30,9 @@ pipeline {
                     sed -i "s|<consul-server-ip>|\$ip|g" ./kubeFiles/values_consul.yaml
                     helm install --values ./kubeFiles/values_consul.yaml consul hashicorp/consul  --namespace consul
                 """
-            }
-        }
-
+            }   
+        }  
+    }
 
     post {
         success {
