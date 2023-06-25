@@ -31,7 +31,7 @@ pipeline {
                     sed -i "s|<consul-server-ip>|\$ip|g" ./kubeFiles/values_consul.yaml
                     helm install --values ./kubeFiles/values_consul.yaml consul hashicorp/consul --namespace consul
                 """
-            }   
+            }
         }
 
 
