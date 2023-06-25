@@ -23,7 +23,6 @@ pipeline {
                 sh """ 
                     echo 'Install consul'
                     helm repo add hashicorp https://helm.releases.hashicorp.com
-                    kubectl delete secret consul-gossip-encryption-key --namespace consul > /dev/null 2>&1
                     kubectl create secret generic consul-gossip-encryption-key --from-literal=key="uDBV4e+LbFW3019YKPxIrg==" --namespace consul
                     chmod 600 /home/ubuntu/.kube/config
                     output=\$(dig +answer consul.service.opsschool.consul:8600)
