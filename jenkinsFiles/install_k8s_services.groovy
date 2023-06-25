@@ -28,7 +28,7 @@ pipeline {
 
                 echo "node exporter"
                 helm repo add bitnami https://charts.bitnami.com/bitnami
-                helm install k8s bitnami/node-exporter -f values_node-exporter.yaml  
+                helm install k8s bitnami/node-exporter -f ./kubeFiles/values_node-exporter.yaml  
 
                 echo "filebeat"
                 kubectl apply -f ./kubeFiles/filebeat.yaml
