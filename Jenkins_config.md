@@ -11,10 +11,10 @@
 # Configure your 2 slaves (Do it twice 1. slave1 2. Slave2)
 - Go to "**Manage Jenkins**" then add "**+ New Node**"
 - Under "**New node**" page, type the **Node name** and select "**Permanent Agent**"
-- Type **Name** in the "**Name**" bracket
+- Type **slave** in the "**Name**" bracket
 - Add Description
 - Select the "**Number of executors**" - "**2**"
-- Type **Remote root directory** in "**Number of executors**" bracket - "**Home/ubuntu/jenkins**"
+- Type **Remote root directory** in "**Number of executors**" bracket - "**/home/ubuntu/jenkins**"
 - Type **Lable** in the "**Labels**" bracket - "**slaves**"
 - Select **Use this node as much as possible** in the "**Usage**" bracket
 - Select **Launch agents via SSH** in the "**Launch method**" bracket
@@ -22,6 +22,7 @@
 - Select **Ubuntu (Jenkins slaves ssh)**  in the "**Credentials**" bracket
 - Select **Manually trusted key verification strategy** in the **Host Key Verification Strategy** bracket
 - Press "**Save**"
+- Do it twice with different names and ip addresses
 
 # configure slack app integration
  - Go into **manage Jenkins>configure system* and search for Slack.

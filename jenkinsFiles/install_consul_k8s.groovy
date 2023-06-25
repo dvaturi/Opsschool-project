@@ -20,7 +20,7 @@ pipeline {
 
         stage('Install Cosnul on Kubernetes'){
             steps {
-                sh """ 
+                sh ''' 
                     echo 'Install consul'
                     helm repo add hashicorp https://helm.releases.hashicorp.com
                     kubectl create secret generic consul-gossip-encryption-key --from-literal=key="uDBV4e+LbFW3019YKPxIrg==" --namespace consul
@@ -28,7 +28,7 @@ pipeline {
                     ip=\$(dig +short consul.service.consul | sed 's/^/"/; s/$/"/' | paste -sd ",")
                     sed -i "s|<consul-server-ip>|\$ip|g" ./kubeFiles/values_consul.yaml
                     helm install --values ./kubeFiles/values_consul.yaml consul hashicorp/consul  --namespace consul
-                """
+                '''
             }   
         }  
     }
