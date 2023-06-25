@@ -37,7 +37,7 @@ variable "destination_vpn_script_path" {
 variable "instance_type" {
   description = "The type of the EC2, for example - t2.medium"
   type        = string
-  default     = "t2.micro"
+  default     = "t2.small"
 }
 
 variable "instance_type2" {
