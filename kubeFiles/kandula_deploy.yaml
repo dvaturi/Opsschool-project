@@ -1,23 +1,65 @@
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: kandula
+#   namespace: kandula # namespace added
+#   labels:
+#     app: backend
+#     # env: prod
+# spec:
+#   replicas: 2
+#   selector:
+#     matchLabels:
+#       app: backend
+#       # env: prod
+#   template:
+#     metadata:
+#       labels:
+#         app: backend
+#         # env: prod
+#     spec:
+#       containers:
+#       - name: kandula
+#         image: dvaturi/kandula:latest
+#         ports:
+#         - containerPort: 5000
+#           name: http
+#           protocol: TCP
+#         env:
+#         - name: FLASK_APP
+#           value: kandula
+#         - name: SECRET_KEY
+#           value: kandula123
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: kandula
-  namespace: kandula # namespace added
+  namespace: kandula
   labels:
     app: backend
-    # env: prod
 spec:
   replicas: 2
   selector:
     matchLabels:
       app: backend
-      # env: prod
   template:
     metadata:
       labels:
         app: backend
-        # env: prod
+      annotations: 
+        date: "+%H:%M:%S %d/%m/%y"  
     spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - backend
+            topologyKey: "kubernetes.io/hostname"
       containers:
       - name: kandula
         image: dvaturi/kandula:latest
@@ -27,6 +69,6 @@ spec:
           protocol: TCP
         env:
         - name: FLASK_APP
-          value: kandula
+          value: "kandula"
         - name: SECRET_KEY
-          value: kandula123
+          value: "kandula123"
