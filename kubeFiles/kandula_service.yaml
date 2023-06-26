@@ -1,18 +1,32 @@
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: backend-service
+#   namespace: kandula # namespace added
+#   labels:
+#     app: backend
+#     # env: prod
+# spec:
+#   selector:
+#     app: backend
+#     # env: prod
+#   type: LoadBalancer
+#   ports:
+#     - name: http
+#       port: 80
+#       targetPort: 5000
+#       protocol: TCP
 apiVersion: v1
 kind: Service
 metadata:
-  name: backend-service
-  namespace: kandula # namespace added
-  labels:
-    app: backend
-    # env: prod
+  name: kandula-service
+  namespace: kandula
 spec:
   selector:
     app: backend
-    # env: prod
-  type: LoadBalancer
   ports:
     - name: http
       port: 80
       targetPort: 5000
-      protocol: TCP
+  type: LoadBalancer
+  externalTrafficPolicy: Local
