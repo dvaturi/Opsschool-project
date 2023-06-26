@@ -16,15 +16,15 @@ spec:
         app: backend
     spec:
       affinity:
-        podAntiAffinity:
+        nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
-            - labelSelector:
-                matchExpressions:
-                  - key: app
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: topology.kubernetes.io/zone
                     operator: In
                     values:
-                      - backend
-              topologyKey: "kubernetes.io/hostname"
+                      - us-east-1a
+                      - us-east-1b
       containers:
         - name: kandula
           image: dvaturi/kandula:latest
