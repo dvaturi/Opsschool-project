@@ -3,7 +3,8 @@
 ![Untitled drawio (11)](https://github.com/dvaturi/Opsschool-project/assets/57751780/0ac328df-b137-4aca-a2b8-30612c662453)
 
 ## Project Workflow diagram
-![CI_CD flow diagram drawio](https://user-images.githubusercontent.com/57751780/232643071-8e1407cd-3d85-477b-85bf-ab9fc41648f5.png)
+![CI_CD flow diagram drawio (2)](https://github.com/dvaturi/Opsschool-project/assets/57751780/17d5b2a3-0c4a-4da5-8f01-3c2ad06c3aa2)
+
 
 ## Prerequisites
 - Install [Terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli) on your workstation/server
