@@ -1,7 +1,6 @@
 # START ENVIRONMENT
 ## infrastructure diagram
-![Untitled drawio (10)](https://user-images.githubusercontent.com/57751780/233061445-ab1618db-3472-4f3c-af76-32df9ce588ba.png)
-
+![Untitled drawio (11)](https://github.com/dvaturi/Opsschool-project/assets/57751780/0ac328df-b137-4aca-a2b8-30612c662453)
 
 ## Project Workflow diagram
 ![CI_CD flow diagram drawio](https://user-images.githubusercontent.com/57751780/232643071-8e1407cd-3d85-477b-85bf-ab9fc41648f5.png)
