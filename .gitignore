@@ -31,3 +31,4 @@ kubeconfig_*
 */.private/*
 private/*
 dean-us-east-1-private
+aws-auth.yaml
