@@ -262,7 +262,13 @@ resource "kubernetes_namespace" "consul" {
 
 resource "kubernetes_namespace" "filebeat" {
   metadata {
-    name = "filebeat"
+    name = "monitoring"
+  }
+}
+
+resource "kubernetes_namespace" "filebeat" {
+  metadata {
+    name = "logging"
   }
 }
 

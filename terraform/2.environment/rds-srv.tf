@@ -44,6 +44,7 @@ resource "aws_db_instance" "postgres" {
   username             = "postgres"
   password             = random_password.rds_password.result
   port                 = 5432
+  multi_az             = true 
   publicly_accessible = false
   skip_final_snapshot  = true
 

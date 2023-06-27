@@ -247,7 +247,7 @@ serviceMonitor:
   enabled: false
   ## Namespace in which Prometheus is running
   ##
-  # namespace: monitoring
+  #namespace: monitoring
 
   ## The name of the label on the target service to use as the job name in prometheus
   # jobLabel:

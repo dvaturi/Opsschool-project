@@ -3,7 +3,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: node_exporter-config
-  namespace: default
+  namespace: monitoring
   labels:
     k8s-app: node_exporter
 data:
