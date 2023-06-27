@@ -27,8 +27,9 @@ pipeline {
                 ./kubeFiles/update-coredns-configmap.sh --validate=false
 
                 echo "node exporter"
-                helm repo add bitnami https://charts.bitnami.com/bitnami
-                helm install k8s bitnami/node-exporter -f ./kubeFiles/values_node-exporter.yaml -n monitoring
+                helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+                helm repo update
+                helm install  node-exporter prometheus-community/prometheus-node-exporter -n monitoring --values ./kubeFiles/values_node_exporter.yaml
 
                 echo "filebeat"
                 kubectl apply -f ./kubeFiles/filebeat.yaml

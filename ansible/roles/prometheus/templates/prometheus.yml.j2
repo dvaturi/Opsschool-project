@@ -42,7 +42,7 @@ scrape_configs:
     consul_sd_configs:
       - server: '{{ hostvars[inventory_hostname]["ansible_default_ipv4"]["address"] }}:8500'
         services:
-          - 'k8s-node-exporter-default'
+          - 'k8s-node-exporter-monitoring'
     relabel_configs:
       - source_labels: ['__address__']
         target_label: '__address__'
